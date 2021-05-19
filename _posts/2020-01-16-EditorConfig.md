@@ -4,7 +4,7 @@ title: VScode代码规范
 subtitle: 利用editorconfig, prettier, eslint
 date: 2020-01-20
 author: Mariana
-header-img: img/2020/2020-01-16.jpg
+header-img: /dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390787183_7251.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0
 catalog: true
 tags:
   - 前端

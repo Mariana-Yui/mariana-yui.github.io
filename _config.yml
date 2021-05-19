@@ -1,7 +1,7 @@
 # Site settings
 title: Mariana Blog
 SEOTitle: Mariana Blog
-header-img: img/post-bg-desk.jpg
+header-img: /dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390631325_3901.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0
 email: HealMSlin@gmail.com
 description: "write less, do more"
 keyword: "Lin,Mariana Blog, Denislin的博客, front-end, full-stack, 前端"
@@ -12,7 +12,7 @@ github_repo: "https://github.com/mariana-yui/mariana-yui.github.io.git" # you co
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
 sidebar-about-description: "Sometimes you have to stop thinking too much and just go where your heart takes you."
-sidebar-avatar: /img/avatar_fav.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390655047_8325.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0 # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # bgm
 aplayer_js: https://mariana-yui.github.io/js/APlayer.min.js

@@ -3,7 +3,7 @@ layout: post
 title: 购买域名及本地调试博客
 date: 2020-03-24
 author: Mariana
-header-img: img/2020/2020-03-24.jpg
+header-img: /dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390819129_2937.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0
 catalog: true
 tags:
   - 博客
@@ -11,7 +11,7 @@ tags:
 
 # 背景
 
-事情大概是这样, 做毕设需要用到图床, 于是用了七牛云图床, 然后发现可以自定义的加速域名, 于是就打算整个域名玩玩. 然后发现不能备案, 再然后 emmm 决定曲线救国给播客安个域名.
+事情大概是这样, 做毕设需要用到图床, 于是用了七牛云图床, 然后发现可以自定义的加速域名, 于是就打算整个域名玩玩. 然后发现不能备案, 再然后 emmm 决定曲线救国给博客安个域名.
 
 # 绑定域名
 
