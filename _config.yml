@@ -1,17 +1,17 @@
 # Site settings
 title: Mariana Blog
 SEOTitle: Mariana Blog
-header-img: /dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390631325_3901.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0
+header-img: /dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621590614935_823.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0
 email: HealMSlin@gmail.com
-description: "write less, do more"
-keyword: "Lin,Mariana Blog, Denislin的博客, front-end, full-stack, 前端"
-url: "http://mariana-yui.github.io" # your host, for absolute URL
-baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
-github_repo: "https://github.com/mariana-yui/mariana-yui.github.io.git" # you code repository
+description: 'write less, do more'
+keyword: 'Lin,Mariana Blog, Denislin的博客, front-end, full-stack, 前端'
+url: 'http://mariana-yui.github.io' # your host, for absolute URL
+baseurl: '' # for example, '/blog' if your blog hosted on 'host/blog'
+github_repo: 'https://github.com/mariana-yui/mariana-yui.github.io.git' # you code repository
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
-sidebar-about-description: "Sometimes you have to stop thinking too much and just go where your heart takes you."
+sidebar-about-description: 'Sometimes you have to stop thinking too much and just go where your heart takes you.'
 sidebar-avatar: https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390655047_8325.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0 # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # bgm
@@ -30,7 +30,7 @@ github_username: Mariana-Yui
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 permalink: pretty
 paginate: 10
-exclude: ["less", "node_modules", "Gruntfile.js", "package.json", "README.md"]
+exclude: ['less', 'node_modules', 'Gruntfile.js', 'package.json', 'README.md']
 anchorjs: true # if you want to customize anchor. check out line:181 of `post.html`
 
 # Gems
@@ -69,7 +69,7 @@ gitalk:
 ba_track_id: 8fd9faeb30a21f9c4295bc1446138fc2
 
 # Google Analytics
-ga_track_id: "UA-148995736-1" # Format: UA-xxxxxx-xx
+ga_track_id: 'UA-148995736-1' # Format: UA-xxxxxx-xx
 ga_domain: auto # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
 
 # Featured Tags
@@ -77,7 +77,7 @@ featured-tags: true # 是否使用首页标签
 featured-condition-size: 0 # 相同标签数量大于这个数，才会出现在首页
 
 # Progressive Web Apps
-chrome-tab-theme-color: "#000000"
+chrome-tab-theme-color: '#000000'
 service-worker: true
 # Friends
 # friends: [
