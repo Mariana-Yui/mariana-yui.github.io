@@ -407,6 +407,31 @@ new AddAssetHtmlWebpackPlugin({
 });
 ```
 
+## webpack 打包 npm 包
+
+webpack 打包库文件需要在`output`额外加上`library`和`libraryTarget`属性, 并且将`package.json`的`main`入口文件修改为 webpack 输出的`output`fileanem 文件
+一下一个简单的 npm 包的 webpack 配置, 注意以下几点:
+
+1. `libraryTarget`表示使用的场景, `umd`表示通用版本, 可以 `import(esmodule)` 引入, 可以 `require(CommonJS)` 引入, 也可以通过 `<script>` 标签引入
+2. 如果要直接在 html 中通过 script 引入需要指定`library`, 比如示例中指定`library: 'library'`, webpack 就会将 export 内容绑定到`window.library`上
+3. 如果 npm 包中使用了其他的库,比如 lodash, 业务场景中也使用了 lodash, 就会打包出两份 lodash, 这不合理, 可以指定`externals`不让 webpck 打包 npm 包时打包 lodash
+4. 在 node 中导入时可能会遇到`self is not defined`报错, 需要设置`globalObject`属性
+
+```js
+module.exports = {
+  mode: 'production',
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: 'library.js',
+    library: 'library',
+    libraryTarget: 'umd',
+    globalObject: 'this'
+  },
+  externals: ['lodash']
+};
+```
+
 ## common development production
 
 可以新建`webpack.dev.js`和`webpack.prod.js`分别存储开发环境和生产环境的配置, 最后通过`webpack.common.js`存储通用配置并且通过判断当前环境输出最终配置.
