@@ -11,6 +11,8 @@ tags:
 
 > 内卷, 内卷害了所有人
 
+**2021-06-06 updated**: 更多配置案例可以参考[官方例子](https://github.com/webpack/webpack/tree/master/examples)
+
 对 webpack 的配置做个笔记,后续不定期补充, 也会补充的 webpack 源码的学习
 
 ## mode
@@ -40,13 +42,15 @@ entry: ["@babel/polyfill", "/your/entry/file/path"]
 ## output
 
 `filename` 中 name 为入口文件的`key`, 字符串形式时 name 为 main, hash,chunkhash,contenthash 区别见[hash, chunkhash, contenthash 区别](#hash,chunkhash,contenthash)
-`chunkFilename`针对的是那些间接引入的文件,即非 entry 指定的文件, 命名以`chunkFilename`为准, `[name]`为`splitChunks`归类的文件名
+`chunkFilename`针对的是那些间接引入的文件,即非 entry 指定的文件, 命名以`chunkFilename`为准, `[name]`为`splitChunks`归类的文件名,
+`publicPath`html 引入 output 的 js 是的前缀路径
 
 ```js
 output: {
   filename: '[name].[hash:8].js',
   path: '/your/output/directory',
-  chunkFilename: '[name].chunk.js'
+  chunkFilename: '[name].chunk.js',
+  publicPath: '/assets'
 }
 ```
 
@@ -436,12 +440,13 @@ module.exports = {
 
 可以新建`webpack.dev.js`和`webpack.prod.js`分别存储开发环境和生产环境的配置, 最后通过`webpack.common.js`存储通用配置并且通过判断当前环境输出最终配置.
 webpack 除了可以输出对象, 也可以输出函数, 参数为环境变量, 函数返回配置对象
+[env 动态配置环境](https://webpack.docschina.org/api/cli/#env)
 
 ```js
 const merge = require('webpack-merge');
 // 省略其他配置
 // webpack --env.production --config webpack.config.js
-// 此时env就存在production属性, 也可以指定production的值(--env.production=nxx)
+// 此时env就存在production属性, 也可以指定production的值(--env production=xxx)
 module.exports = (env) => {
   if (env && env.production) {
     return merge(commonCfg, prodCfg);
@@ -463,3 +468,13 @@ module.exports = (env) => {
 ```
 
 ```
+
+## 推荐阅读
+
+### [Webpack 4 和单页应用入门](https://github.com/wallstreetcn/webpack-and-spa-guide)
+
+### [手摸手，带你用合理的姿势使用 webpack4（上）](https://segmentfault.com/a/1190000015919863)
+
+### [手摸手，带你用合理的姿势使用 webpack4（下）](https://juejin.cn/post/6844903661441646605)
+
+### [你的 Tree-Shaking 并没什么卵用](https://zhuanlan.zhihu.com/p/32831172)
