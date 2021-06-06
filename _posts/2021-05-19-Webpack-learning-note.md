@@ -411,6 +411,10 @@ new AddAssetHtmlWebpackPlugin({
 });
 ```
 
+### ScriptExtHtmlWebpackPlugin
+
+**不支持 webpack5**, 配合`html-webpack-plugin`使用, 支持异步加载 JavaScript 文件
+
 ## webpack 打包 npm 包
 
 webpack 打包库文件需要在`output`额外加上`library`和`libraryTarget`属性, 并且将`package.json`的`main`入口文件修改为 webpack 输出的`output`fileanem 文件
