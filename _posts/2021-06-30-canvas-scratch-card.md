@@ -49,7 +49,7 @@ interface ScratchCardConfig {
 
 前置知识: canva 设置 width/height 改变的是绘图区域的宽高, 设置 style.width/height 改变的是元素的宽高, 绘图区域没有发生改变, 绘图区域会根据元素宽高等比例缩放.
 而对于 retina 屏幕(这里指定 2 倍物理像素, 实际项目可以使用 window.devicePixelRatio 判断), 一个逻辑像素 = 2 物理像素, 相当于图片放大了一倍, 所以这里指定 canvas 属性 width/height 为 750/280, style.width/height 为 350/140. 相当于图片缩小一倍. 这样图片就变清晰了.
-**不要问为什么不直接把 canvas 属性 width/height 直接设为 750/280, 这样图片就无法绘制完全**
+**不要问为什么不直接把 canvas style width/height 直接设为 750/280, 这样图片就无法绘制完全**
 award.jpg 也是一样, 缩小一倍进行显示
 
 HTML 代码:
