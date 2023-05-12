@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-11-24-daily-record-from-oct-to-dec.jpeg">
 <meta property="article:published_time" content="2022-11-24T08:21:13.000Z">
-<meta property="article:modified_time" content="2023-04-28T03:44:37.732Z">
+<meta property="article:modified_time" content="2023-05-12T07:58:12.717Z">
 <meta property="article:author" content="Mariana Yui">
 <meta property="article:tag" content="工作">
 <meta property="article:tag" content="问题记录">
@@ -291,8 +291,8 @@
       <br>
       <span class="post-meta">
         <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
-        <time datetime="2023-04-28 11:44" pubdate>
-          Updated: 2023年04月28日 中午 11:44
+        <time datetime="2023-05-12 15:58" pubdate>
+          Updated: 2023年05月12日 下午 15:58
         </time>
       </span>
     
@@ -310,7 +310,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          5.6k 字
+          5.8k 字
         
       </span>
     
@@ -322,7 +322,7 @@
         
         
           <!-- compatible with older versions-->
-          48 分钟
+          49 分钟
         
       </span>
     
@@ -467,7 +467,8 @@
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">NODE_CONFIG_DIR</span>=./env<br><span class="hljs-attr">NODE_ENV</span>=development<br><span class="hljs-attr">SIGN</span>=P2E<span class="hljs-comment">#xWehFZc</span><br></code></pre></td></tr></table></figure>
 <p>读取<strong>SIGN</strong>时会将#后面的阶段, 导致<strong>SIGN</strong>的值变为<code>P2</code>, 这种情况在两边加上 quote 即可解决:</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">SIGN</span>=<span class="hljs-string">&#x27;P2E#xWehFZc&#x27;</span><br></code></pre></td></tr></table></figure>
-<p>``</p>
+<h2 id="iframe"><a class="markdownIt-Anchor" href="#iframe"></a> iframe</h2>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// 父页面 -&gt; 子页面, iframe为iframe DOM节点</span><br>iframe.<span class="hljs-property">contentWindow</span>.<span class="hljs-title function_">postMessage</span>(data, &#123;&#125;);<br><span class="hljs-comment">// 子页面 -&gt; 父页面</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">parent</span>.<span class="hljs-title function_">postMessage</span>(data, &#123;&#125;);<br></code></pre></td></tr></table></figure>
 <h1 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h1>
 <h2 id="1-cannot-find-module-pm2libprocesscontainerforkjs"><a class="markdownIt-Anchor" href="#1-cannot-find-module-pm2libprocesscontainerforkjs"></a> 1. cannot find module pm2/lib/ProcessContainerFork.js</h2>
 <p><code>rm -rf ~/.pm2</code></p>
@@ -576,9 +577,9 @@ vue.config.js 中配置</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/12/06/2023-04-28-write-a-webpack5-plugin/" title="webpack5+rollup 开发 plugin">
+                      <a href="/2023/04/20/2023-04-20-server-via-nestjs-summary/" title="nestjs开发及流水线相关问题记录">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">webpack5+rollup 开发 plugin</span>
+                        <span class="hidden-mobile">nestjs开发及流水线相关问题记录</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
