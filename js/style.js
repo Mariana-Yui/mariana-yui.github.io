@@ -32,10 +32,10 @@ if (["/archives/", "/tags/"].includes(location.pathname)) {
 jQuery("figure.highlight").click(function (e) {
   if ($(e.target).hasClass("icon-arrowdown")) {
     $(e.target).removeClass("icon-arrowdown").addClass("icon-arrowup");
-    $(this).removeClass("fold");
+    $(this).addClass("fold");
   } else if ($(e.target).hasClass("icon-arrowup")) {
     $(e.target).removeClass("icon-arrowup").addClass("icon-arrowdown");
-    $(this).addClass("fold");
+    $(this).removeClass("fold");
   }
 });
 
