@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 上班摸鱼事件研究 koa 及其周边中间件的第一弹 - koa-router, 个人理解都写在注释中了, koa 及 koa-xx 源码突出一个短小精悍, 很适合进阶阅读。  源码解读 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565">
+<meta property="og:type" content="article">
+<meta property="og:title" content="koa-router源码解析">
+<meta property="og:url" content="https://mariana-yui.github.io/2021/11/16/2021-11-16-koa-router/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 上班摸鱼事件研究 koa 及其周边中间件的第一弹 - koa-router, 个人理解都写在注释中了, koa 及 koa-xx 源码突出一个短小精悍, 很适合进阶阅读。  源码解读 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1637054476066_2643.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+<meta property="article:published_time" content="2021-11-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.009Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="canvas">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1637054476066_2643.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+  
+  
+  
+  <title>koa-router源码解析 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('//dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1637054476066_2643.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="koa-router源码解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-16 00:00" pubdate>
+          Created: 2021年11月16日 凌晨 00:00
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          22k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          184 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">koa-router源码解析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>上班摸鱼事件研究 koa 及其周边中间件的第一弹 - <code>koa-router</code>, 个人理解都写在注释中了, koa 及 koa-xx 源码突出一个短小精悍, 很适合进阶阅读。</p>
+<h1 id="源码解读"><a class="markdownIt-Anchor" href="#源码解读"></a> 源码解读</h1>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br><span class="line">680</span><br><span class="line">681</span><br><span class="line">682</span><br><span class="line">683</span><br><span class="line">684</span><br><span class="line">685</span><br><span class="line">686</span><br><span class="line">687</span><br><span class="line">688</span><br><span class="line">689</span><br><span class="line">690</span><br><span class="line">691</span><br><span class="line">692</span><br><span class="line">693</span><br><span class="line">694</span><br><span class="line">695</span><br><span class="line">696</span><br><span class="line">697</span><br><span class="line">698</span><br><span class="line">699</span><br><span class="line">700</span><br><span class="line">701</span><br><span class="line">702</span><br><span class="line">703</span><br><span class="line">704</span><br><span class="line">705</span><br><span class="line">706</span><br><span class="line">707</span><br><span class="line">708</span><br><span class="line">709</span><br><span class="line">710</span><br><span class="line">711</span><br><span class="line">712</span><br><span class="line">713</span><br><span class="line">714</span><br><span class="line">715</span><br><span class="line">716</span><br><span class="line">717</span><br><span class="line">718</span><br><span class="line">719</span><br><span class="line">720</span><br><span class="line">721</span><br><span class="line">722</span><br><span class="line">723</span><br><span class="line">724</span><br><span class="line">725</span><br><span class="line">726</span><br><span class="line">727</span><br><span class="line">728</span><br><span class="line">729</span><br><span class="line">730</span><br><span class="line">731</span><br><span class="line">732</span><br><span class="line">733</span><br><span class="line">734</span><br><span class="line">735</span><br><span class="line">736</span><br><span class="line">737</span><br><span class="line">738</span><br><span class="line">739</span><br><span class="line">740</span><br><span class="line">741</span><br><span class="line">742</span><br><span class="line">743</span><br><span class="line">744</span><br><span class="line">745</span><br><span class="line">746</span><br><span class="line">747</span><br><span class="line">748</span><br><span class="line">749</span><br><span class="line">750</span><br><span class="line">751</span><br><span class="line">752</span><br><span class="line">753</span><br><span class="line">754</span><br><span class="line">755</span><br><span class="line">756</span><br><span class="line">757</span><br><span class="line">758</span><br><span class="line">759</span><br><span class="line">760</span><br><span class="line">761</span><br><span class="line">762</span><br><span class="line">763</span><br><span class="line">764</span><br><span class="line">765</span><br><span class="line">766</span><br><span class="line">767</span><br><span class="line">768</span><br><span class="line">769</span><br><span class="line">770</span><br><span class="line">771</span><br><span class="line">772</span><br><span class="line">773</span><br><span class="line">774</span><br><span class="line">775</span><br><span class="line">776</span><br><span class="line">777</span><br><span class="line">778</span><br><span class="line">779</span><br><span class="line">780</span><br><span class="line">781</span><br><span class="line">782</span><br><span class="line">783</span><br><span class="line">784</span><br><span class="line">785</span><br><span class="line">786</span><br><span class="line">787</span><br><span class="line">788</span><br><span class="line">789</span><br><span class="line">790</span><br><span class="line">791</span><br><span class="line">792</span><br><span class="line">793</span><br><span class="line">794</span><br><span class="line">795</span><br><span class="line">796</span><br><span class="line">797</span><br><span class="line">798</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> debug = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;debug&#x27;</span>)(<span class="hljs-string">&#x27;koa-router&#x27;</span>); <span class="hljs-comment">// logger</span><br><span class="hljs-keyword">const</span> compose = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa-compose&#x27;</span>); <span class="hljs-comment">// 执行中间件列表</span><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">HttpError</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;http-errors&#x27;</span>); <span class="hljs-comment">// 封装的http错误库</span><br><span class="hljs-keyword">const</span> methods = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;methods&#x27;</span>); <span class="hljs-comment">// 返回http.METHODS</span><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Layer</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./layer&#x27;</span>);<br><span class="hljs-keyword">const</span> &#123; pathToRegexp &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path-to-regexp&#x27;</span>); <span class="hljs-comment">// 对路由path正则解析</span><br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title class_">Router</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Create a new router.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Basic usage:</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const Koa = require(&#x27;koa&#x27;);</span><br><span class="hljs-comment"> * const Router = require(&#x27;<span class="hljs-doctag">@koa</span>/router&#x27;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * const app = new Koa();</span><br><span class="hljs-comment"> * const router = new Router();</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.get(&#x27;/&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *   // ctx.router available</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * app</span><br><span class="hljs-comment"> *   .use(router.routes())</span><br><span class="hljs-comment"> *   .use(router.allowedMethods());</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@alias</span> module:koa-router</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object=</span>&#125; <span class="hljs-variable">opts</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String=</span>&#125; opts.prefix prefix router paths</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@constructor</span></span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Router</span>(<span class="hljs-params">opts</span>) &#123;<br>  <span class="hljs-comment">// 如果没用new实例则返回new实例, 即创建路由时可以使用new Router()或Router()</span><br>  <span class="hljs-keyword">if</span> (!(<span class="hljs-variable language_">this</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Router</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Router</span>(opts);<br><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span> = opts || &#123;&#125;;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">methods</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">methods</span> || [<span class="hljs-string">&#x27;HEAD&#x27;</span>, <span class="hljs-string">&#x27;OPTIONS&#x27;</span>, <span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;PUT&#x27;</span>, <span class="hljs-string">&#x27;PATCH&#x27;</span>, <span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;DELETE&#x27;</span>];<br>  <span class="hljs-comment">// 存储router.param()指定的参数, 键为参数名称, 值为中间件</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">params</span> = &#123;&#125;;<br>  <span class="hljs-comment">// 每次router.verb()都会创建一个layer, 存储这些layer</span><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span> = [];<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Create `router.verb()` methods, where *verb* is one of the HTTP verbs such</span><br><span class="hljs-comment"> * as `router.get()` or `router.post()`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Match URL patterns to callback functions or controller actions using `router.verb()`,</span><br><span class="hljs-comment"> * where **verb** is one of the HTTP verbs such as `router.get()` or `router.post()`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Additionaly, `router.all()` can be used to match against all methods.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router</span><br><span class="hljs-comment"> *   .get(&#x27;/&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     ctx.body = &#x27;Hello World!&#x27;;</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .post(&#x27;/users&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     // ...</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .put(&#x27;/users/:id&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     // ...</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .del(&#x27;/users/:id&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     // ...</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .all(&#x27;/users/:id&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     // ...</span><br><span class="hljs-comment"> *   &#125;);</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * When a route is matched, its path is available at `ctx._matchedRoute` and if named,</span><br><span class="hljs-comment"> * the name is available at `ctx._matchedRouteName`</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Route paths will be translated to regular expressions using</span><br><span class="hljs-comment"> * [path-to-regexp](https://github.com/pillarjs/path-to-regexp).</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Query strings will not be considered when matching requests.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * #### Named routes</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Routes can optionally have names. This allows generation of URLs and easy</span><br><span class="hljs-comment"> * renaming of URLs during development.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.get(&#x27;user&#x27;, &#x27;/users/:id&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *  // ...</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.url(&#x27;user&#x27;, 3);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/3&quot;</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * #### Multiple middleware</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Multiple middleware may be given:</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.get(</span><br><span class="hljs-comment"> *   &#x27;/users/:id&#x27;,</span><br><span class="hljs-comment"> *   (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     return User.findOne(ctx.params.id).then(function(user) &#123;</span><br><span class="hljs-comment"> *       ctx.user = user;</span><br><span class="hljs-comment"> *       next();</span><br><span class="hljs-comment"> *     &#125;);</span><br><span class="hljs-comment"> *   &#125;,</span><br><span class="hljs-comment"> *   ctx =&gt; &#123;</span><br><span class="hljs-comment"> *     console.log(ctx.user);</span><br><span class="hljs-comment"> *     // =&gt; &#123; id: 17, name: &quot;Alex&quot; &#125;</span><br><span class="hljs-comment"> *   &#125;</span><br><span class="hljs-comment"> * );</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ### Nested routers</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Nesting routers is supported:</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const forums = new Router();</span><br><span class="hljs-comment"> * const posts = new Router();</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * posts.get(&#x27;/&#x27;, (ctx, next) =&gt; &#123;...&#125;);</span><br><span class="hljs-comment"> * posts.get(&#x27;/:pid&#x27;, (ctx, next) =&gt; &#123;...&#125;);</span><br><span class="hljs-comment"> * forums.use(&#x27;/forums/:fid/posts&#x27;, posts.routes(), posts.allowedMethods());</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * // responds to &quot;/forums/123/posts&quot; and &quot;/forums/123/posts/123&quot;</span><br><span class="hljs-comment"> * app.use(forums.routes());</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * #### Router prefixes</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Route paths can be prefixed at the router level:</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const router = new Router(&#123;</span><br><span class="hljs-comment"> *   prefix: &#x27;/users&#x27;</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.get(&#x27;/&#x27;, ...); // responds to &quot;/users&quot;</span><br><span class="hljs-comment"> * router.get(&#x27;/:id&#x27;, ...); // responds to &quot;/users/:id&quot;</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * #### URL parameters</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Named route parameters are captured and added to `ctx.params`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.get(&#x27;/:category/:title&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *   console.log(ctx.params);</span><br><span class="hljs-comment"> *   // =&gt; &#123; category: &#x27;programming&#x27;, title: &#x27;how-to-node&#x27; &#125;</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * The [path-to-regexp](https://github.com/pillarjs/path-to-regexp) module is</span><br><span class="hljs-comment"> * used to convert paths to regular expressions.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@name</span> get|put|post|patch|delete|del</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@memberof</span> module:koa-router.prototype</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">path</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function=</span>&#125; middleware route middleware(s)</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function</span>&#125; callback route callback</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * methods库就两行代码, 读取http.METHODS返回小写列表</span><br><span class="hljs-comment"> * 遍历所有http方法, 赋值实例方法例如router.get/router.post等</span><br><span class="hljs-comment"> * 并通过router.register方法将每个通过该实例方法创建的路由注册成Layer</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; methods.<span class="hljs-property">length</span>; i++) &#123;<br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">setMethodVerb</span>(<span class="hljs-params">method</span>) &#123;<br>    <span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>[method] = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, path, middleware</span>) &#123;<br>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> path === <span class="hljs-string">&#x27;string&#x27;</span> || path <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">RegExp</span>) &#123;<br>        middleware = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">2</span>);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        middleware = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">1</span>);<br>        path = name;<br>        name = <span class="hljs-literal">null</span>;<br>      &#125;<br><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>(path, [method], middleware, &#123;<br>        <span class="hljs-attr">name</span>: name<br>      &#125;);<br><br>      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>    &#125;;<br>  &#125;<br>  <span class="hljs-title function_">setMethodVerb</span>(methods[i]);<br>&#125;<br><br><span class="hljs-comment">// Alias for `router.delete()` because delete is a reserved word</span><br><span class="hljs-comment">// 设置router.delete的别名</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">del</span> = <span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>[<span class="hljs-string">&#x27;delete&#x27;</span>];<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Use given middleware.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Middleware run in the order they are defined by `.use()`. They are invoked</span><br><span class="hljs-comment"> * sequentially, requests start at the first middleware and work their way</span><br><span class="hljs-comment"> * &quot;down&quot; the middleware stack.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * // session middleware will run before authorize</span><br><span class="hljs-comment"> * router</span><br><span class="hljs-comment"> *   .use(session())</span><br><span class="hljs-comment"> *   .use(authorize());</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * // use middleware only with given path</span><br><span class="hljs-comment"> * router.use(&#x27;/users&#x27;, userAuth());</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * // or with an array of paths</span><br><span class="hljs-comment"> * router.use([&#x27;/users&#x27;, &#x27;/admin&#x27;], userAuth());</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * app.use(router.routes());</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String=</span>&#125; <span class="hljs-variable">path</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function</span>&#125; <span class="hljs-variable">middleware</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function=</span>&#125; ...</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">use</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">const</span> router = <span class="hljs-variable language_">this</span>;<br>  <span class="hljs-keyword">const</span> middleware = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>);<br>  <span class="hljs-keyword">let</span> path;<br><br>  <span class="hljs-comment">// support array of paths</span><br>  <span class="hljs-comment">// 和router.register类似, use的path参数也支持数组, 如果是数组则做一层递归, [p].concat(middleware.slice(1))即path+middleware</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(middleware[<span class="hljs-number">0</span>]) &amp;&amp; <span class="hljs-keyword">typeof</span> middleware[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;string&#x27;</span>) &#123;<br>    <span class="hljs-keyword">let</span> arrPaths = middleware[<span class="hljs-number">0</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arrPaths.<span class="hljs-property">length</span>; i++) &#123;<br>      <span class="hljs-keyword">const</span> p = arrPaths[i];<br>      router.<span class="hljs-property">use</span>.<span class="hljs-title function_">apply</span>(router, [p].<span class="hljs-title function_">concat</span>(middleware.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>)));<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>  &#125;<br><br>  <span class="hljs-comment">// use可以设置全局中间件, 可以不需要path</span><br>  <span class="hljs-keyword">const</span> hasPath = <span class="hljs-keyword">typeof</span> middleware[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;string&#x27;</span>;<br>  <span class="hljs-comment">// 取出path, 此时middleware参数就是中间件数组</span><br>  <span class="hljs-keyword">if</span> (hasPath) path = middleware.<span class="hljs-title function_">shift</span>();<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; middleware.<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> m = middleware[i];<br>    <span class="hljs-comment">// router还支持一种嵌套路由例如, router.use(&#x27;/user&#x27;, userRouter.routes())</span><br>    <span class="hljs-comment">// 从routes()中已经知道了会对dispatch添加router属性指向自身this</span><br>    <span class="hljs-comment">// 所以该分支用于处理嵌套路由, 此时第一个参数path如果存在则会作为prefix</span><br>    <span class="hljs-keyword">if</span> (m.<span class="hljs-property">router</span>) &#123;<br>      <span class="hljs-comment">// 克隆router</span><br>      <span class="hljs-keyword">const</span> cloneRouter = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>), m.<span class="hljs-property">router</span>, &#123;<br>        <span class="hljs-comment">// stack即嵌套路由含有的layer</span><br>        <span class="hljs-attr">stack</span>: m.<span class="hljs-property">router</span>.<span class="hljs-property">stack</span>.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>)<br>      &#125;);<br><br>      <span class="hljs-comment">// 克隆layer</span><br>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; cloneRouter.<span class="hljs-property">stack</span>.<span class="hljs-property">length</span>; j++) &#123;<br>        <span class="hljs-keyword">const</span> nestedLayer = cloneRouter.<span class="hljs-property">stack</span>[j];<br>        <span class="hljs-keyword">const</span> cloneLayer = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Layer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>), nestedLayer);<br><br>        <span class="hljs-comment">// 设置prefix</span><br>        <span class="hljs-keyword">if</span> (path) cloneLayer.<span class="hljs-title function_">setPrefix</span>(path);<br>        <span class="hljs-keyword">if</span> (router.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span>) cloneLayer.<span class="hljs-title function_">setPrefix</span>(router.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span>);<br>        <span class="hljs-comment">// 将嵌套路由中克隆的中间件抽离出来, 赋值给自身路由</span><br>        router.<span class="hljs-property">stack</span>.<span class="hljs-title function_">push</span>(cloneLayer);<br>        cloneRouter.<span class="hljs-property">stack</span>[j] = cloneLayer;<br>      &#125;<br><br>      <span class="hljs-comment">// 如果自身路由对param()做过设置, 这里也要对嵌套路由中提取的中间件赋值</span><br>      <span class="hljs-keyword">if</span> (router.<span class="hljs-property">params</span>) &#123;<br>        <span class="hljs-keyword">function</span> <span class="hljs-title function_">setRouterParams</span>(<span class="hljs-params">paramArr</span>) &#123;<br>          <span class="hljs-keyword">const</span> routerParams = paramArr;<br>          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; routerParams.<span class="hljs-property">length</span>; j++) &#123;<br>            <span class="hljs-keyword">const</span> key = routerParams[j];<br>            cloneRouter.<span class="hljs-title function_">param</span>(key, router.<span class="hljs-property">params</span>[key]);<br>          &#125;<br>        &#125;<br>        <span class="hljs-title function_">setRouterParams</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(router.<span class="hljs-property">params</span>));<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 单纯中间件, 则和router.verb一样register中间件</span><br>      <span class="hljs-keyword">const</span> keys = [];<br>      <span class="hljs-title function_">pathToRegexp</span>(router.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span> || <span class="hljs-string">&#x27;&#x27;</span>, keys);<br>      <span class="hljs-keyword">const</span> routerPrefixHasParam = router.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span> &amp;&amp; keys.<span class="hljs-property">length</span>;<br>      router.<span class="hljs-title function_">register</span>(path || <span class="hljs-string">&#x27;([^/]*)&#x27;</span>, [], m, &#123;<br>        <span class="hljs-attr">end</span>: <span class="hljs-literal">false</span>,<br>        <span class="hljs-attr">ignoreCaptures</span>: !hasPath &amp;&amp; !routerPrefixHasParam<br>      &#125;);<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Set the path prefix for a Router instance that was already initialized.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.prefix(&#x27;/things/:thing_id&#x27;)</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">prefix</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 给已创建Layer统一设置路由前缀</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">prefix</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">prefix</span>) &#123;<br>  prefix = prefix.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\/$/</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span> = prefix;<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>.<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> route = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>[i];<br>    route.<span class="hljs-title function_">setPrefix</span>(prefix);<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Returns router middleware which dispatches a route matching the request.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Function</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// router.routes()定义dispatch函数用于执行中间件, 返回dispatch函数</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">routes</span> = <span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">middleware</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">const</span> router = <span class="hljs-variable language_">this</span>;<br><br>  <span class="hljs-keyword">let</span> dispatch = <span class="hljs-keyword">function</span> <span class="hljs-title function_">dispatch</span>(<span class="hljs-params">ctx, next</span>) &#123;<br>    <span class="hljs-title function_">debug</span>(<span class="hljs-string">&#x27;%s %s&#x27;</span>, ctx.<span class="hljs-property">method</span>, ctx.<span class="hljs-property">path</span>);<br>    <span class="hljs-comment">// 解析请求上下文的path和method</span><br>    <span class="hljs-keyword">const</span> path = router.<span class="hljs-property">opts</span>.<span class="hljs-property">routerPath</span> || ctx.<span class="hljs-property">routerPath</span> || ctx.<span class="hljs-property">path</span>;<br>    <span class="hljs-comment">// 返回匹配的layer</span><br>    <span class="hljs-keyword">const</span> matched = router.<span class="hljs-title function_">match</span>(path, ctx.<span class="hljs-property">method</span>);<br>    <span class="hljs-keyword">let</span> layerChain;<br><br>    <span class="hljs-comment">// 找了koa和koa-router的ctx.matched, 貌似不会进入if分支</span><br>    <span class="hljs-keyword">if</span> (ctx.<span class="hljs-property">matched</span>) &#123;<br>      ctx.<span class="hljs-property">matched</span>.<span class="hljs-property">push</span>.<span class="hljs-title function_">apply</span>(ctx.<span class="hljs-property">matched</span>, matched.<span class="hljs-property">path</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 将匹配到的layer赋值给上下文</span><br>      ctx.<span class="hljs-property">matched</span> = matched.<span class="hljs-property">path</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 将koa-router实例赋值上下文</span><br>    ctx.<span class="hljs-property">router</span> = router;<br><br>    <span class="hljs-comment">// 匹配到的methods列表为空的话直接next()</span><br>    <span class="hljs-keyword">if</span> (!matched.<span class="hljs-property">route</span>) <span class="hljs-keyword">return</span> <span class="hljs-title function_">next</span>();<br><br>    <span class="hljs-comment">// 匹配path和method的layer列表</span><br>    <span class="hljs-keyword">const</span> matchedLayers = matched.<span class="hljs-property">pathAndMethod</span>;<br>    <span class="hljs-keyword">const</span> mostSpecificLayer = matchedLayers[matchedLayers.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];<br>    <span class="hljs-comment">// 去最后一个元素作为ctx._matchedRoute</span><br>    ctx.<span class="hljs-property">_matchedRoute</span> = mostSpecificLayer.<span class="hljs-property">path</span>;<br>    <span class="hljs-keyword">if</span> (mostSpecificLayer.<span class="hljs-property">name</span>) &#123;<br>      ctx.<span class="hljs-property">_matchedRouteName</span> = mostSpecificLayer.<span class="hljs-property">name</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 这里通过reduce做了两件事</span><br><span class="hljs-comment">     * 1. 将所有layer的中间件即layer.stack整合到一个列表中</span><br><span class="hljs-comment">     * 2. 在处理每个layer的中间件前push一个初始化当前ctx上下文的中间件, 避免不同layer之间相互影响</span><br><span class="hljs-comment">     * layer.captures(path)调用path.match(this.regexp)匹配ctx.path中的params</span><br><span class="hljs-comment">     * layer.params()会decode params的值并复制给ctx.params</span><br><span class="hljs-comment">     */</span><br>    layerChain = matchedLayers.<span class="hljs-title function_">reduce</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">memo, layer</span>) &#123;<br>      memo.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">ctx, next</span>) &#123;<br>        ctx.<span class="hljs-property">captures</span> = layer.<span class="hljs-title function_">captures</span>(path, ctx.<span class="hljs-property">captures</span>);<br>        ctx.<span class="hljs-property">params</span> = ctx.<span class="hljs-property">request</span>.<span class="hljs-property">params</span> = layer.<span class="hljs-title function_">params</span>(path, ctx.<span class="hljs-property">captures</span>, ctx.<span class="hljs-property">params</span>);<br>        ctx.<span class="hljs-property">routerPath</span> = layer.<span class="hljs-property">path</span>;<br>        ctx.<span class="hljs-property">routerName</span> = layer.<span class="hljs-property">name</span>;<br>        ctx.<span class="hljs-property">_matchedRoute</span> = layer.<span class="hljs-property">path</span>;<br>        <span class="hljs-keyword">if</span> (layer.<span class="hljs-property">name</span>) &#123;<br>          ctx.<span class="hljs-property">_matchedRouteName</span> = layer.<span class="hljs-property">name</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">next</span>();<br>      &#125;);<br>      <span class="hljs-keyword">return</span> memo.<span class="hljs-title function_">concat</span>(layer.<span class="hljs-property">stack</span>);<br>    &#125;, []);<br><br>    <span class="hljs-comment">// koa-compose执行中间件</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">compose</span>(layerChain)(ctx, next);<br>  &#125;;<br><br>  dispatch.<span class="hljs-property">router</span> = <span class="hljs-variable language_">this</span>;<br><br>  <span class="hljs-keyword">return</span> dispatch;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Returns separate middleware for responding to `OPTIONS` requests with</span><br><span class="hljs-comment"> * an `Allow` header containing the allowed methods, as well as responding</span><br><span class="hljs-comment"> * with `405 Method Not Allowed` and `501 Not Implemented` as appropriate.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const Koa = require(&#x27;koa&#x27;);</span><br><span class="hljs-comment"> * const Router = require(&#x27;<span class="hljs-doctag">@koa</span>/router&#x27;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * const app = new Koa();</span><br><span class="hljs-comment"> * const router = new Router();</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * app.use(router.routes());</span><br><span class="hljs-comment"> * app.use(router.allowedMethods());</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * **Example with [Boom](https://github.com/hapijs/boom)**</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const Koa = require(&#x27;koa&#x27;);</span><br><span class="hljs-comment"> * const Router = require(&#x27;<span class="hljs-doctag">@koa</span>/router&#x27;);</span><br><span class="hljs-comment"> * const Boom = require(&#x27;boom&#x27;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * const app = new Koa();</span><br><span class="hljs-comment"> * const router = new Router();</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * app.use(router.routes());</span><br><span class="hljs-comment"> * app.use(router.allowedMethods(&#123;</span><br><span class="hljs-comment"> *   throw: true,</span><br><span class="hljs-comment"> *   notImplemented: () =&gt; new Boom.notImplemented(),</span><br><span class="hljs-comment"> *   methodNotAllowed: () =&gt; new Boom.methodNotAllowed()</span><br><span class="hljs-comment"> * &#125;));</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object=</span>&#125; <span class="hljs-variable">options</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Boolean=</span>&#125; options.throw throw error instead of setting status and header</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function=</span>&#125; options.notImplemented throw the returned value in place of the default NotImplemented error</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function=</span>&#125; options.methodNotAllowed throw the returned value in place of the default MethodNotAllowed error</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Function</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">allowedMethods</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) &#123;<br>  options = options || &#123;&#125;;<br>  <span class="hljs-keyword">const</span> implemented = <span class="hljs-variable language_">this</span>.<span class="hljs-property">methods</span>;<br><br>  <span class="hljs-comment">// koa-compose对next()的返回是Promise的形式, allowedMethods则是用于对返回的数据进行处理</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">allowedMethods</span>(<span class="hljs-params">ctx, next</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">next</span>().<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">const</span> allowed = &#123;&#125;;<br><br>      <span class="hljs-comment">// 这里可以看出该方法只针对status为空或404的情况</span><br>      <span class="hljs-keyword">if</span> (!ctx.<span class="hljs-property">status</span> || ctx.<span class="hljs-property">status</span> === <span class="hljs-number">404</span>) &#123;<br>        <span class="hljs-comment">// 遍历匹配的所有layer, 读取所有method</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; ctx.<span class="hljs-property">matched</span>.<span class="hljs-property">length</span>; i++) &#123;<br>          <span class="hljs-keyword">const</span> route = ctx.<span class="hljs-property">matched</span>[i];<br>          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; route.<span class="hljs-property">methods</span>.<span class="hljs-property">length</span>; j++) &#123;<br>            <span class="hljs-keyword">const</span> method = route.<span class="hljs-property">methods</span>[j];<br>            allowed[method] = method;<br>          &#125;<br>        &#125;<br>        <span class="hljs-comment">// 所有允许的请求method</span><br>        <span class="hljs-keyword">const</span> allowedArr = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(allowed);<br><br>        <span class="hljs-comment">// 如果请求方法不被允许, this.methods为初始化Router时设置的允许方法列表</span><br>        <span class="hljs-keyword">if</span> (!~implemented.<span class="hljs-title function_">indexOf</span>(ctx.<span class="hljs-property">method</span>)) &#123;<br>          <span class="hljs-comment">// 是否需要抛出错误, 以及是否自定义错误</span><br>          <span class="hljs-keyword">if</span> (options.<span class="hljs-property">throw</span>) &#123;<br>            <span class="hljs-keyword">let</span> notImplementedThrowable =<br>              <span class="hljs-keyword">typeof</span> options.<span class="hljs-property">notImplemented</span> === <span class="hljs-string">&#x27;function&#x27;</span><br>                ? options.<span class="hljs-title function_">notImplemented</span>() <span class="hljs-comment">// set whatever the user returns from their function</span><br>                : <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpError</span>.<span class="hljs-title class_">NotImplemented</span>();<br><br>            <span class="hljs-keyword">throw</span> notImplementedThrowable;<br>          &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 设置501 not implemented 状态码和响应头</span><br>            ctx.<span class="hljs-property">status</span> = <span class="hljs-number">501</span>;<br>            ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;Allow&#x27;</span>, allowedArr.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;, &#x27;</span>));<br>          &#125;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (allowedArr.<span class="hljs-property">length</span>) &#123;<br>          <span class="hljs-comment">// 走到这一步表示请求方法是被允许的, 但是可能是OPTIONS预请求, 往往不会对预请求做处理</span><br>          <span class="hljs-comment">// 这里直接正常返回</span><br>          <span class="hljs-keyword">if</span> (ctx.<span class="hljs-property">method</span> === <span class="hljs-string">&#x27;OPTIONS&#x27;</span>) &#123;<br>            ctx.<span class="hljs-property">status</span> = <span class="hljs-number">200</span>;<br>            ctx.<span class="hljs-property">body</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br>            ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;Allow&#x27;</span>, allowedArr.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;, &#x27;</span>));<br>          &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!allowed[ctx.<span class="hljs-property">method</span>]) &#123;<br>            <span class="hljs-comment">// 走到这里表示, 请求是被允许的但是没有相应的layer处理这个路由, 类似的</span><br>            <span class="hljs-comment">// 如果有自定义错误则抛出异常</span><br>            <span class="hljs-keyword">if</span> (options.<span class="hljs-property">throw</span>) &#123;<br>              <span class="hljs-keyword">let</span> notAllowedThrowable =<br>                <span class="hljs-keyword">typeof</span> options.<span class="hljs-property">methodNotAllowed</span> === <span class="hljs-string">&#x27;function&#x27;</span><br>                  ? options.<span class="hljs-title function_">methodNotAllowed</span>() <span class="hljs-comment">// set whatever the user returns from their function</span><br>                  : <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpError</span>.<span class="hljs-title class_">MethodNotAllowed</span>();<br><br>              <span class="hljs-keyword">throw</span> notAllowedThrowable;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>              <span class="hljs-comment">// 否则抛出405 method not allow状态码并设置响应头</span><br>              ctx.<span class="hljs-property">status</span> = <span class="hljs-number">405</span>;<br>              ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;Allow&#x27;</span>, allowedArr.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;, &#x27;</span>));<br>            &#125;<br>          &#125;<br>        &#125;<br>      &#125;<br>    &#125;);<br>  &#125;;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Register route with all methods.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; name Optional.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">path</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function=</span>&#125; middleware You may also pass multiple middleware.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function</span>&#125; <span class="hljs-variable">callback</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@private</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 和router.verb一样, 只不过第二个参数不再是单个verb,而是所有http.METHODS</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">all</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, path, middleware</span>) &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> path === <span class="hljs-string">&#x27;string&#x27;</span>) &#123;<br>    middleware = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">2</span>);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    middleware = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">1</span>);<br>    path = name;<br>    name = <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>(path, methods, middleware, &#123; name &#125;);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Redirect `source` to `destination` URL with optional 30x status `code`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Both `source` and `destination` can be route names.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.redirect(&#x27;/login&#x27;, &#x27;sign-in&#x27;);</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * This is equivalent to:</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.all(&#x27;/login&#x27;, ctx =&gt; &#123;</span><br><span class="hljs-comment"> *   ctx.redirect(&#x27;/sign-in&#x27;);</span><br><span class="hljs-comment"> *   ctx.status = 301;</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; source URL or route name.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; destination URL or route name.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Number=</span>&#125; code HTTP status code (default: 301).</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">redirect</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">source, destination, code</span>) &#123;<br>  <span class="hljs-comment">// lookup source route by name</span><br>  <span class="hljs-keyword">if</span> (source[<span class="hljs-number">0</span>] !== <span class="hljs-string">&#x27;/&#x27;</span>) source = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">url</span>(source);<br><br>  <span class="hljs-comment">// lookup destination route by name</span><br>  <span class="hljs-keyword">if</span> (destination[<span class="hljs-number">0</span>] !== <span class="hljs-string">&#x27;/&#x27;</span> &amp;&amp; !destination.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;://&#x27;</span>)) destination = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">url</span>(destination);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">all</span>(source, <span class="hljs-function">(<span class="hljs-params">ctx</span>) =&gt;</span> &#123;<br>    ctx.<span class="hljs-title function_">redirect</span>(destination);<br>    ctx.<span class="hljs-property">status</span> = code || <span class="hljs-number">301</span>;<br>  &#125;);<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Create and register a route.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; path Path string.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Array.&lt;String&gt;</span>&#125; methods Array of HTTP verbs.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function</span>&#125; middleware Multiple middleware also accepted.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Layer</span>&#125;</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@private</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 这里的methods和middleware都是数组</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">register</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path, methods, middleware, opts</span>) &#123;<br>  opts = opts || &#123;&#125;;<br><br>  <span class="hljs-keyword">const</span> router = <span class="hljs-variable language_">this</span>;<br>  <span class="hljs-keyword">const</span> stack = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>;<br><br>  <span class="hljs-comment">// support array of paths</span><br>  <span class="hljs-comment">// 因为register的path也支持数组, 所以这里做一个递归</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(path)) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; path.<span class="hljs-property">length</span>; i++) &#123;<br>      <span class="hljs-keyword">const</span> curPath = path[i];<br>      router.<span class="hljs-property">register</span>.<span class="hljs-title function_">call</span>(router, curPath, methods, middleware, opts);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>  &#125;<br><br>  <span class="hljs-comment">// create route</span><br>  <span class="hljs-comment">// 创建路由, 最后一个参数用作path-to-regexp库的解析配置</span><br>  <span class="hljs-keyword">const</span> route = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Layer</span>(path, methods, middleware, &#123;<br>    <span class="hljs-attr">end</span>: opts.<span class="hljs-property">end</span> === <span class="hljs-literal">false</span> ? opts.<span class="hljs-property">end</span> : <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">name</span>: opts.<span class="hljs-property">name</span>,<br>    <span class="hljs-attr">sensitive</span>: opts.<span class="hljs-property">sensitive</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">sensitive</span> || <span class="hljs-literal">false</span>,<br>    <span class="hljs-attr">strict</span>: opts.<span class="hljs-property">strict</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">strict</span> || <span class="hljs-literal">false</span>,<br>    <span class="hljs-attr">prefix</span>: opts.<span class="hljs-property">prefix</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span> || <span class="hljs-string">&#x27;&#x27;</span>,<br>    <span class="hljs-attr">ignoreCaptures</span>: opts.<span class="hljs-property">ignoreCaptures</span><br>  &#125;);<br><br>  <span class="hljs-comment">// 设置前缀</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span>) &#123;<br>    route.<span class="hljs-title function_">setPrefix</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">opts</span>.<span class="hljs-property">prefix</span>);<br>  &#125;<br><br>  <span class="hljs-comment">// add parameter middleware</span><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * 这段代码耐人寻味, 首先router.param()的机制是为参数设置的中间件会在所有相关中间件之前执行</span><br><span class="hljs-comment">   * 所以会在每创建一个layer都会遍历存储router.params如果有匹配的中间件, 则把中间件加到layer的中间件列表的最前面</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">params</span>).<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> param = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">params</span>)[i];<br>    route.<span class="hljs-title function_">param</span>(param, <span class="hljs-variable language_">this</span>.<span class="hljs-property">params</span>[param]);<br>  &#125;<br><br>  <span class="hljs-comment">// 存储layer</span><br>  stack.<span class="hljs-title function_">push</span>(route);<br><br>  <span class="hljs-title function_">debug</span>(<span class="hljs-string">&#x27;defined route %s %s&#x27;</span>, route.<span class="hljs-property">methods</span>, route.<span class="hljs-property">path</span>);<br><br>  <span class="hljs-keyword">return</span> route;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Lookup route with given `name`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">name</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Layer|false</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 返回layer.name和参数匹配的第一个layer</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">route</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) &#123;<br>  <span class="hljs-keyword">const</span> routes = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>;<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> len = routes.<span class="hljs-property">length</span>, i = <span class="hljs-number">0</span>; i &lt; len; i++) &#123;<br>    <span class="hljs-keyword">if</span> (routes[i].<span class="hljs-property">name</span> &amp;&amp; routes[i].<span class="hljs-property">name</span> === name) <span class="hljs-keyword">return</span> routes[i];<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Generate URL for route. Takes a route name and map of named `params`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router.get(&#x27;user&#x27;, &#x27;/users/:id&#x27;, (ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *   // ...</span><br><span class="hljs-comment"> * &#125;);</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.url(&#x27;user&#x27;, 3);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/3&quot;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.url(&#x27;user&#x27;, &#123; id: 3 &#125;);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/3&quot;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.use((ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *   // redirect to named route</span><br><span class="hljs-comment"> *   ctx.redirect(ctx.router.url(&#x27;sign-in&#x27;));</span><br><span class="hljs-comment"> * &#125;)</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.url(&#x27;user&#x27;, &#123; id: 3 &#125;, &#123; query: &#123; limit: 1 &#125; &#125;);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/3?limit=1&quot;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * router.url(&#x27;user&#x27;, &#123; id: 3 &#125;, &#123; query: &quot;limit=1&quot; &#125;);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/3?limit=1&quot;</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; name route name</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object</span>&#125; params url parameters</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object</span>&#125; [options] options parameter</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object|String</span>&#125; [options.query] query options</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">String|Error</span>&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">url</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, params</span>) &#123;<br>  <span class="hljs-keyword">const</span> route = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">route</span>(name);<br><br>  <span class="hljs-keyword">if</span> (route) &#123;<br>    <span class="hljs-keyword">const</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">return</span> route.<span class="hljs-property">url</span>.<span class="hljs-title function_">apply</span>(route, args);<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`No route found for name: <span class="hljs-subst">$&#123;name&#125;</span>`</span>);<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Match given `path` and return corresponding routes.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">path</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">method</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Object.&lt;path, pathAndMethod&gt;</span>&#125; returns layers that matched path and</span><br><span class="hljs-comment"> * path and method.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@private</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// matched.path 为匹配到path的layer</span><br><span class="hljs-comment">// matched.pathAndMethod为匹配到path和method的layer</span><br><span class="hljs-comment">// matched.route为是否匹配上的method</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">match</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path, method</span>) &#123;<br>  <span class="hljs-keyword">const</span> layers = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>;<br>  <span class="hljs-keyword">let</span> layer;<br>  <span class="hljs-keyword">const</span> matched = &#123;<br>    <span class="hljs-attr">path</span>: [],<br>    <span class="hljs-attr">pathAndMethod</span>: [],<br>    <span class="hljs-attr">route</span>: <span class="hljs-literal">false</span><br>  &#125;;<br><br>  <span class="hljs-comment">// 遍历layer返回和当前请求路由匹配的layer</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> len = layers.<span class="hljs-property">length</span>, i = <span class="hljs-number">0</span>; i &lt; len; i++) &#123;<br>    layer = layers[i];<br><br>    <span class="hljs-title function_">debug</span>(<span class="hljs-string">&#x27;test %s %s&#x27;</span>, layer.<span class="hljs-property">path</span>, layer.<span class="hljs-property">regexp</span>);<br><br>    <span class="hljs-comment">// layer.match调用layer.regexp.test(path), 匹配路径</span><br>    <span class="hljs-keyword">if</span> (layer.<span class="hljs-title function_">match</span>(path)) &#123;<br>      matched.<span class="hljs-property">path</span>.<span class="hljs-title function_">push</span>(layer);<br>      <span class="hljs-comment">// 匹配方法, 如果methods长度为0或有匹配到的方法, ~操作符是按位非</span><br>      <span class="hljs-keyword">if</span> (layer.<span class="hljs-property">methods</span>.<span class="hljs-property">length</span> === <span class="hljs-number">0</span> || ~layer.<span class="hljs-property">methods</span>.<span class="hljs-title function_">indexOf</span>(method)) &#123;<br>        matched.<span class="hljs-property">pathAndMethod</span>.<span class="hljs-title function_">push</span>(layer);<br>        <span class="hljs-keyword">if</span> (layer.<span class="hljs-property">methods</span>.<span class="hljs-property">length</span>) matched.<span class="hljs-property">route</span> = <span class="hljs-literal">true</span>;<br>      &#125;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> matched;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Run middleware for named route parameters. Useful for auto-loading or</span><br><span class="hljs-comment"> * validation.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * router</span><br><span class="hljs-comment"> *   .param(&#x27;user&#x27;, (id, ctx, next) =&gt; &#123;</span><br><span class="hljs-comment"> *     ctx.user = users[id];</span><br><span class="hljs-comment"> *     if (!ctx.user) return ctx.status = 404;</span><br><span class="hljs-comment"> *     return next();</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .get(&#x27;/users/:user&#x27;, ctx =&gt; &#123;</span><br><span class="hljs-comment"> *     ctx.body = ctx.user;</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   .get(&#x27;/users/:user/friends&#x27;, ctx =&gt; &#123;</span><br><span class="hljs-comment"> *     return ctx.user.getFriends().then(function(friends) &#123;</span><br><span class="hljs-comment"> *       ctx.body = friends;</span><br><span class="hljs-comment"> *     &#125;);</span><br><span class="hljs-comment"> *   &#125;)</span><br><span class="hljs-comment"> *   // /users/3 =&gt; &#123;&quot;id&quot;: 3, &quot;name&quot;: &quot;Alex&quot;&#125;</span><br><span class="hljs-comment"> *   // /users/3/friends =&gt; [&#123;&quot;id&quot;: 4, &quot;name&quot;: &quot;TJ&quot;&#125;]</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; <span class="hljs-variable">param</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Function</span>&#125; <span class="hljs-variable">middleware</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">Router</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 和register新建layer的逻辑类似, register是新建layer, 遍历router.params, 把params匹配到的中间件插到layer.stack最前面</span><br><span class="hljs-comment">// param则是遍历layer, 然后把param设置的中间件插到layer.stack最前面(path多个参数情况下可能不是最前面, 这里先这样形容)</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">param</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">param, middleware</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">params</span>[param] = middleware;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>.<span class="hljs-property">length</span>; i++) &#123;<br>    <span class="hljs-keyword">const</span> route = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stack</span>[i];<br>    route.<span class="hljs-title function_">param</span>(param, middleware);<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Generate URL from url pattern and given `params`.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@example</span></span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * ```javascript</span><br><span class="hljs-comment"> * const url = Router.url(&#x27;/users/:id&#x27;, &#123;id: 1&#125;);</span><br><span class="hljs-comment"> * // =&gt; &quot;/users/1&quot;</span><br><span class="hljs-comment"> * ```</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">String</span>&#125; path url pattern</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Object</span>&#125; params url parameters</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@returns</span> &#123;<span class="hljs-type">String</span>&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">// 调用layer的实例方法, 填充参数, 注意到一点, 这里调用的是layer的实例方法, 内部会引用this.path, 所以新建了一个对象&#123;path&#125;来创建上下文</span><br><span class="hljs-comment">// 内部调用了path-to-regexp的compile/toPath方法来实现</span><br><span class="hljs-title class_">Router</span>.<span class="hljs-property">url</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) &#123;<br>  <span class="hljs-keyword">const</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>, <span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Layer</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">url</span>.<span class="hljs-title function_">apply</span>(&#123; path &#125;, args);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/canvas/">#canvas</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>koa-router源码解析</div>
+      <div>https://mariana-yui.github.io/2021/11/16/2021-11-16-koa-router/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年11月16日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/02/2022-05-02-mod-text-in-lottie/" title="lottie 替换文字">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">lottie 替换文字</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/30/2021-06-30-canvas-scratch-card/" title="canvas实现刮刮卡">
+                        <span class="hidden-mobile">canvas实现刮刮卡</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2021/11/16/2021-11-16-koa-router/';
+          this.page.identifier = '/2021/11/16/2021-11-16-koa-router/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

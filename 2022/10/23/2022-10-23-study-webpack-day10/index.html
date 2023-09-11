@@ -1,0 +1,908 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学习笔记  Tree shaking tree shaking 在计算机中表示消除死代码(dead code). JavaScript 的 Tree shaking 源自于 rollup, 依赖 ES Module 的静态语法分析. webpack4 正式扩展了这个能力, 分为usedExports和sideEffects两种:  usedExports optimization.usedExp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack学习笔记(10)">
+<meta property="og:url" content="https://mariana-yui.github.io/2022/10/23/2022-10-23-study-webpack-day10/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="学习笔记  Tree shaking tree shaking 在计算机中表示消除死代码(dead code). JavaScript 的 Tree shaking 源自于 rollup, 依赖 ES Module 的静态语法分析. webpack4 正式扩展了这个能力, 分为usedExports和sideEffects两种:  usedExports optimization.usedExp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-10-23-study-webpack-day10.jpeg">
+<meta property="article:published_time" content="2022-10-23T11:53:56.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.011Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-10-23-study-webpack-day10.jpeg">
+  
+  
+  
+  <title>webpack学习笔记(10) - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2022-10-23-study-webpack-day10.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="webpack学习笔记(10)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-23 19:53" pubdate>
+          Created: 2022年10月23日 晚上 19:53
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          7.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">webpack学习笔记(10)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="学习笔记"><a class="markdownIt-Anchor" href="#学习笔记"></a> 学习笔记</h1>
+<h2 id="tree-shaking"><a class="markdownIt-Anchor" href="#tree-shaking"></a> Tree shaking</h2>
+<p>tree shaking 在计算机中表示消除死代码(dead code).<br />
+JavaScript 的 Tree shaking 源自于 rollup, 依赖 ES Module 的静态语法分析.<br />
+webpack4 正式扩展了这个能力, 分为<code>usedExports</code>和<code>sideEffects</code>两种:</p>
+<h3 id="usedexports"><a class="markdownIt-Anchor" href="#usedexports"></a> usedExports</h3>
+<p><code>optimization.usedExports</code>, <strong>production</strong>模式下默认为 true. 该配置会配合<strong>TerserPlugin</strong>使用, 方便演示, 以下默认<code>mode</code>为<strong>development</strong>.</p>
+<p>示例入口文件:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; sum &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./math&quot;</span>;<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(sum);<br></code></pre></td></tr></table></figure>
+<p>模块文件:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">sum</span>(<span class="hljs-params">num1, num2</span>) &#123;<br>  <span class="hljs-keyword">return</span> num1 + num2;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">mul</span>(<span class="hljs-params">num1, num2</span>) &#123;<br>  <span class="hljs-keyword">return</span> num1 * num2;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>先开启<code>optimization.usedExports</code>, 关闭<strong>TerserPlugin</strong>插件, 查看打包产物:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1665914627139_3858.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到对于没有引用的函数, <code>usedExports</code>会在上方标明注释, 提供给<strong>TerserPlugin</strong>进行加工删除.</p>
+<p>现在开启<strong>TerserPlugin</strong>插件, 查看打包产物:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1665914691599_6111.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>会发现打包产物中<strong>mul</strong>函数没有被打包进去.</p>
+<p>此时如果再将作用域提升<strong>webpack.optimize.ModuleConcatenationPlugin</strong>插件打开, 打包产物就会只显示 sum 函数, 连引入标识, IIFE 等信息一并删除, 就想上一篇末尾提到的那样.</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1665914791948_4934.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="sideeffects"><a class="markdownIt-Anchor" href="#sideeffects"></a> sideEffects</h3>
+<p><code>sideEffects</code>主要用于第三方库文件, 在 npm 包的<strong>package.json</strong>中配置<strong>sideEffects</strong>, 用于告知 webpack compiler 哪些模块是有副作用的.</p>
+<p>什么是<strong>副作用</strong>? 即模块内可能存在影响到全局环境的逻辑; 比如说某个模块并不是只含有纯函数, 而是存在</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">window</span>.<span class="hljs-property">app</span> = <span class="hljs-literal">true</span>;<br></code></pre></td></tr></table></figure>
+<p>这样的逻辑, 这就表示该模块是有副作用的, 随意删除模块代码可能会影响运行.<br />
+所以<code>sideEffects</code>默认为 true. 也就是默认情况下, 直接使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;./math&quot;</span>;<br></code></pre></td></tr></table></figure>
+<p>webpack 是不会将 math 模块的代码删除的.<br />
+可以配置数组, 指定模块中那些文件是含有副作用的; 当然推荐编写不含有副作用的模块, 但是对于 css 文件而言, 一定是有副作用的, 所以如果项目中引入了模块中的 css 文件, 有以下两种解决方式:</p>
+<ol>
+<li><code>sideEffects</code>中添加 css 文件, 如<code>&quot;sideEffects&quot;: [&quot;**/*.css&quot;]</code></li>
+<li>在<code>module.rules</code>对处理 css 文件时配置<code>sideEffects</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.css$/i</span>,<br>  <span class="hljs-attr">use</span>: [<span class="hljs-string">&#x27;style-loader&#x27;</span>, <span class="hljs-string">&#x27;css-loader&#x27;</span>],<br>  <span class="hljs-attr">sideEffects</span>: <span class="hljs-literal">true</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下面也举个简单例子, 本地创建个 npm 包, 包含两个文件:</p>
+<p><strong>index.js</strong>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">window</span>.<span class="hljs-property">app</span> = <span class="hljs-string">&quot;abc&quot;</span>;<br></code></pre></td></tr></table></figure>
+<p><strong>style.css</strong>:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">body</span> &#123;<br>  <span class="hljs-attribute">color</span>: red;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通过<code>yarn link</code>在 demo 中引入, demo 入口文件添加以下代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;webpack-npm/lib/style.css&quot;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;webpack-npm/lib/index.js&quot;</span>;<br><br><span class="hljs-keyword">const</span> element = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;div&quot;</span>);<br>element.<span class="hljs-property">innerHTML</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">app</span>;<br><span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(element);<br></code></pre></td></tr></table></figure>
+<p>现将 npm 包中<code>sideEffects</code>置为 false, 打包页面浏览器打开:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1666540416154_2096.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到<strong>color</strong>样式没有生效, <strong>window.app</strong>也没有赋值.</p>
+<p>然后将<code>sideEffects</code>配置为**[“**/*.css”]**或者配置<code>rules.sideEffects</code> 都可以; 打包页面打开浏览器:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1666540559057_9057.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>说明 css 文件参与打包, js 文件被删除了.<br />
+最后将<code>sideEffects</code>置为 true, 可以看到有副作用的文件都参与打包.</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1666540638739_5879.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p><strong>总结一下</strong><br />
+如何在生产环境对 JavaScript 代码进行 tree shaking 呢?</p>
+<ol>
+<li>设置<code>optimization.usedExports</code>为 true, 帮助<strong>TerserPlugin</strong>进行优化</li>
+<li><strong>package.json</strong>中配置<code>sideEffects</code>, 直接对模块进行优化.</li>
+</ol>
+<h3 id="tree-shaking-in-css"><a class="markdownIt-Anchor" href="#tree-shaking-in-css"></a> Tree-shaking in Css</h3>
+<p>早期 webpack 使用<strong>purifyCss</strong>插件对 css 文件进行 tree shaking, 但是该库已不再维护, 最新的提交也是 4 年前, 目前使用<strong>purgeCss</strong>来完成 css 的 tree shaking.</p>
+<p>安装: <code>yarn add -D purgecss-webpack-plugin</code></p>
+<p>如果想要正常使用<strong>purgeCss</strong>还需要安装<strong>mini-css-extract-plugin</strong>生成单独 css 文件插件, 如果之前没安装过也需要安装.</p>
+<p>使用示例, <strong>purgeCss</strong>版本更新后需要解构引入:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;path&quot;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">MiniCssExtractPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;mini-css-extract-plugin&quot;</span>);<br><span class="hljs-keyword">const</span> &#123; <span class="hljs-title class_">PurgeCSSPlugin</span> &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;purgecss-webpack-plugin&quot;</span>);<br><span class="hljs-keyword">const</span> glob = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;glob&quot;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">HtmlWebpackPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;html-webpack-plugin&quot;</span>);<br><span class="hljs-keyword">const</span> &#123; <span class="hljs-title class_">CleanWebpackPlugin</span> &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;clean-webpack-plugin&quot;</span>);<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-comment">// mode: &#x27;production&#x27;,</span><br>  <span class="hljs-attr">entry</span>: <span class="hljs-string">&quot;./index.js&quot;</span>,<br>  <span class="hljs-attr">output</span>: &#123;<br>    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./build&quot;</span>),<br>    <span class="hljs-attr">filename</span>: <span class="hljs-string">&quot;bundle.js&quot;</span>,<br>  &#125;,<br>  <span class="hljs-attr">module</span>: &#123;<br>    <span class="hljs-attr">rules</span>: [<br>      &#123;<br>        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.css$/i</span>,<br>        <span class="hljs-attr">use</span>: [<span class="hljs-title class_">MiniCssExtractPlugin</span>.<span class="hljs-property">loader</span>, <span class="hljs-string">&quot;css-loader&quot;</span>],<br>      &#125;,<br>    ],<br>  &#125;,<br>  <span class="hljs-attr">plugins</span>: [<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CleanWebpackPlugin</span>(),<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlWebpackPlugin</span>(&#123;<br>      <span class="hljs-attr">template</span>: <span class="hljs-string">&quot;./index.html&quot;</span>,<br>    &#125;),<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">MiniCssExtractPlugin</span>(&#123;<br>      <span class="hljs-attr">filename</span>: <span class="hljs-string">&quot;[name].css&quot;</span>,<br>    &#125;),<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">PurgeCSSPlugin</span>(&#123;<br>      <span class="hljs-attr">paths</span>: glob.<span class="hljs-title function_">sync</span>(<span class="hljs-string">&quot;./**/*&quot;</span>, &#123; <span class="hljs-attr">nodir</span>: <span class="hljs-literal">true</span> &#125;),<br>    &#125;),<br>  ],<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p><strong>purgeCss</strong>会识别 html 和 js 中用到的 class 或 className 等, 经测试:</p>
+<ol>
+<li>即使 js 中注释 className 逻辑, 打包产物仍然会存在对应类名</li>
+<li>不会去除对 body, html 标签设置的 css</li>
+<li>有可能会额外删除 代码中实际会用到的 css, 导致样式错乱(在博主 Vue 项目中有出现过)</li>
+</ol>
+<p>抛开上述问题, <strong>purgeCss</strong>打包效果是非常优秀的. 第三点可以通过配置<strong>safeList</strong>解决</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">collectSafelist</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">standard</span>: [<span class="hljs-string">&quot;safelisted&quot;</span>, <span class="hljs-regexp">/^safelisted-/</span>],<br>    <span class="hljs-attr">deep</span>: [<span class="hljs-regexp">/^safelisted-deep-/</span>],<br>    <span class="hljs-attr">greedy</span>: [<span class="hljs-regexp">/^safelisted-greedy/</span>],<br>  &#125;;<br>&#125;<br><br><span class="hljs-comment">// In the webpack configuration</span><br><span class="hljs-keyword">new</span> <span class="hljs-title class_">PurgeCSSPlugin</span>(&#123;<br>  <span class="hljs-attr">safelist</span>: collectSafelist,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="compress"><a class="markdownIt-Anchor" href="#compress"></a> Compress</h3>
+<p>这个属于了解知识. 一般性能优化也不会到这种地步(笑)</p>
+<h4 id="http-压缩"><a class="markdownIt-Anchor" href="#http-压缩"></a> Http 压缩</h4>
+<p>如今绝大部分浏览器都已经支持 Http 压缩, 支持的浏览器在向服务器发送请求时, 会告知服务器自己支持哪些压缩格式, 例如<code>Accept: Encoding: gzip, deflate</code>, 服务器中如果存在浏览器支持压缩格式的压缩文件就会, 就会直接返回对应的压缩后文件, 并在响应头重告知浏览器, 例如<code>Content-Encoding: gzip</code>, 浏览器会完成解压操作, 无需我们关注.</p>
+<p>webpack 中依赖<code>compression-webpack-plugin</code>插件来指定打包产物生成对应的压缩文件.</p>
+<p>webpack 配置:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">CompressionPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;compression-webpack-plugin&quot;</span>);<br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  <span class="hljs-attr">plugins</span>: [<br>    <span class="hljs-comment">//...</span><br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CompressionPlugin</span>(&#123;<br>      <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(css|js)$/i</span>, <span class="hljs-comment">// 指定需要压缩的文件类型</span><br>      <span class="hljs-attr">threshold</span>: <span class="hljs-number">0</span>, <span class="hljs-comment">// 需要压缩的文件大小阈值</span><br>      <span class="hljs-attr">algorithm</span>: <span class="hljs-string">&quot;gzip&quot;</span>, <span class="hljs-comment">// 压缩算法, 和Conten-Encoding对应</span><br>    &#125;),<br>  ],<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>需要注意的是, threshold 即使设置的很小或 0, <strong>CompressionPlugin</strong>也不是会对所有匹配到的文件都进行压缩的, 插件内部设置了最小的阈值.<br />
+所以这里实例代码中引入了<strong>lodash</strong>包, 可以看到打包产物存在 js 和压缩后的 gz 文件</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1668618792046_8806.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h4 id="html-压缩"><a class="markdownIt-Anchor" href="#html-压缩"></a> Html 压缩</h4>
+<p><strong>html-webpack-plugin</strong>除了设置 html 模板同时默认也压缩了 html 代码, <code>minify: 'auto'</code>表示默认配置, 也可以自己配置.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlWebpackPlugin</span>(&#123;<br>  <span class="hljs-attr">template</span>: <span class="hljs-string">&quot;./index.html&quot;</span>,<br>  <span class="hljs-attr">inject</span>: <span class="hljs-string">&quot;head&quot;</span>, <span class="hljs-comment">// 默认为head, 可设置boolean, head, body, true和head含义相同</span><br>  <span class="hljs-attr">cache</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">minify</span>: isProduction<br>    ? &#123;<br>        <span class="hljs-attr">removeComments</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 移除注释</span><br>        <span class="hljs-attr">resolveRedundantAttributes</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 移除多余属性</span><br>        <span class="hljs-attr">removeEmptyAttributes</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 移除空属性</span><br>        <span class="hljs-attr">collapseWhitespace</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 移除换行和空格</span><br>        <span class="hljs-attr">minifyCss</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 压缩内联样式表css</span><br>        <span class="hljs-attr">minifyJS</span>: &#123;<br>          <span class="hljs-comment">// 压缩内联js</span><br>          <span class="hljs-attr">mangle</span>: <span class="hljs-literal">true</span>,<br>        &#125;,<br>      &#125;<br>    : <span class="hljs-string">&quot;auto&quot;</span>,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="inlinechunkhtmlplugin"><a class="markdownIt-Anchor" href="#inlinechunkhtmlplugin"></a> InlineChunkHtmlPlugin</h3>
+<p>这是<strong>react-dev-utils</strong>提供的一个插件用于关联<strong>HtmlWebpackPlugin</strong>, 将匹配到的文件插入 html 文件内联 js 形式执行, 减少打包产物的文件数量.达到<strong>文件体积</strong>和<strong>Http 请求数</strong>的平衡.</p>
+<p>安装: <code>yarn add -D react-dev-utils</code></p>
+<p>配置, 这里以动态导入生成的 runtime 文件举例子, 将 runtime 逻辑 inline 到 html 中:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">HtmlWebpackPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;html-webpack-plugin&quot;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">InlineChunkHtmlPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;react-dev-utils/InlineChunkHtmlPlugin&quot;</span>);<br><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;path&quot;</span>);<br><span class="hljs-keyword">const</span> &#123; <span class="hljs-title class_">CleanWebpackPlugin</span> &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;clean-webpack-plugin&quot;</span>);<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">entry</span>: <span class="hljs-string">&quot;./index.js&quot;</span>,<br>  <span class="hljs-attr">output</span>: &#123;<br>    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">&quot;./&quot;</span>,<br>    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./build&quot;</span>),<br>    <span class="hljs-attr">filename</span>: <span class="hljs-string">&quot;[name].[hash:6].bundle.js&quot;</span>,<br>  &#125;,<br>  <span class="hljs-attr">plugins</span>: [<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CleanWebpackPlugin</span>(),<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlWebpackPlugin</span>(),<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">InlineChunkHtmlPlugin</span>(<span class="hljs-title class_">HtmlWebpackPlugin</span>, [<span class="hljs-regexp">/runtime.*\.js/</span>]),<br>  ],<br>  <span class="hljs-attr">optimization</span>: &#123;<br>    <span class="hljs-attr">runtimeChunk</span>: <span class="hljs-literal">true</span>,<br>  &#125;,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>可以看到 runtime 文件的代码被 inline 到 html 中了, 截取了部分代码, 完整例子可以查看示例代码 p4.</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1668701277710_2858.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>这里可能会有一个问题:</p>
+<ol>
+<li><strong>InlineChunkHtmlPlugin</strong>不会删除 inline 后的文件, 需要手动删除</li>
+</ol>
+<h3 id="npm-package-using-webpack"><a class="markdownIt-Anchor" href="#npm-package-using-webpack"></a> npm package using webpack</h3>
+<p>webpack 同样可以用于打包代码作为第三方库文件, 只需要对添加少量配置. <s>虽然一般都是使用 rollup 打包</s></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">HtmlWebpackPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;html-webpack-plugin&quot;</span>);<br><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;path&quot;</span>);<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">entry</span>: <span class="hljs-string">&quot;./lib/index.js&quot;</span>,<br>  <span class="hljs-attr">output</span>: &#123;<br>    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./dist&quot;</span>),<br>    <span class="hljs-attr">filename</span>: <span class="hljs-string">&quot;bundle.js&quot;</span>,<br>    <span class="hljs-attr">libraryTarget</span>: <span class="hljs-string">&quot;umd&quot;</span>,<br>    <span class="hljs-attr">library</span>: <span class="hljs-string">&quot;math&quot;</span>,<br>    <span class="hljs-attr">globalObject</span>: <span class="hljs-string">&quot;this&quot;</span>,<br>  &#125;,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>可以看到只是对<strong>output</strong>增加了三个属性:</p>
+<ul>
+<li><strong>libraryTarget</strong>: 打包产物遵守哪种模块导入规则, 一般都是<code>umd</code>, 即<strong>universal module defination</strong>支持<code>esm | amd | cmd | commonjs</code>所有规则导入.</li>
+<li><strong>library</strong>: 挂载在全局对象的对象名, 这里举例 math, 浏览器中就可通过<code>window.math</code>访问.</li>
+<li><code>globalObject</code>: 一般都用<code>this</code>, this 默认根据不同环境表示不同的全局变量 window 或 global, 也可以设置成 document.</li>
+</ul>
+<p>这里简单将两个函数打包为 npm 包:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">num1, num2</span>) &#123;<br>  <span class="hljs-keyword">return</span> num1 + num2;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">minus</span>(<span class="hljs-params">num1, num2</span>) &#123;<br>  <span class="hljs-keyword">return</span> num1 - num2;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>打包为 umd 文件后, 各种环境下不同规则引用的允许情况:</p>
+<p>浏览器:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1668872875364_7197.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>commonjs:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1668872961970_6136.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>esm:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1668873018807_3447.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到都能够正常执行.</p>
+<p>最后看下 umd 形式打包产物是如何适配不同模块导入规则的; 文件开头就能看到会通过判断不同模块规则中特有的标量如<code>module</code>, <code>define</code>等来判断是哪种导入规则, 从而将入口文件挂载到对应的对象上.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-keyword">function</span> (<span class="hljs-params">e, t</span>) &#123;<br>  <span class="hljs-string">&quot;object&quot;</span> == <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">exports</span> &amp;&amp; <span class="hljs-string">&quot;object&quot;</span> == <span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">module</span><br>    ? (<span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title function_">t</span>())<br>    : <span class="hljs-string">&quot;function&quot;</span> == <span class="hljs-keyword">typeof</span> define &amp;&amp; define.<span class="hljs-property">amd</span><br>    ? <span class="hljs-title function_">define</span>([], t)<br>    : <span class="hljs-string">&quot;object&quot;</span> == <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">exports</span><br>    ? (<span class="hljs-built_in">exports</span>.<span class="hljs-property">math</span> = <span class="hljs-title function_">t</span>())<br>    : (e.<span class="hljs-property">math</span> = <span class="hljs-title function_">t</span>());<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h1 id="示例代码"><a class="markdownIt-Anchor" href="#示例代码"></a> 示例代码</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day10">https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day10</a></p>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://purgecss.com/plugins/webpack.html">purgecss in webpack</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/webpack/" class="category-chain-item">webpack</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/webpack/">#webpack</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>webpack学习笔记(10)</div>
+      <div>https://mariana-yui.github.io/2022/10/23/2022-10-23-study-webpack-day10/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月23日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/" title="前端工作日常问题和易忘点记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">前端工作日常问题和易忘点记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/09/2022-10-09-study-webpack-day9/" title="webpack学习笔记(9)">
+                        <span class="hidden-mobile">webpack学习笔记(9)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2022/10/23/2022-10-23-study-webpack-day10/';
+          this.page.identifier = '/2022/10/23/2022-10-23-study-webpack-day10/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({});
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

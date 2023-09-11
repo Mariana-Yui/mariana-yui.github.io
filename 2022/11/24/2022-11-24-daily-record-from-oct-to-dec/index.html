@@ -1,0 +1,899 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 记录下日常遇到的问题和简便操作  学到了  1. ant-design 中的图标应用 @ant-design&#x2F;icons-vue提供了很多图标组件 在 vue 组件中使用可以直接通过: 1234import &amp;#123; StepBackwardOutlined &amp;#125; from &quot;@ant-design&#x2F;icons-vue&quot;;&#x2F;&#x2F; 使用&lt;StepBackw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端工作日常问题和易忘点记录">
+<meta property="og:url" content="https://mariana-yui.github.io/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 记录下日常遇到的问题和简便操作  学到了  1. ant-design 中的图标应用 @ant-design&#x2F;icons-vue提供了很多图标组件 在 vue 组件中使用可以直接通过: 1234import &amp;#123; StepBackwardOutlined &amp;#125; from &quot;@ant-design&#x2F;icons-vue&quot;;&#x2F;&#x2F; 使用&lt;StepBackw">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-11-24-daily-record-from-oct-to-dec.jpeg">
+<meta property="article:published_time" content="2022-11-24T08:21:13.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.011Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="工作">
+<meta property="article:tag" content="问题记录">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-11-24-daily-record-from-oct-to-dec.jpeg">
+  
+  
+  
+  <title>前端工作日常问题和易忘点记录 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2022-11-24-daily-record-from-oct-to-dec.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="前端工作日常问题和易忘点记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-24 16:21" pubdate>
+          Created: 2022年11月24日 下午 16:21
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          49 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">前端工作日常问题和易忘点记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>记录下日常遇到的问题和简便操作</p>
+<h1 id="学到了"><a class="markdownIt-Anchor" href="#学到了"></a> 学到了</h1>
+<h2 id="1-ant-design-中的图标应用"><a class="markdownIt-Anchor" href="#1-ant-design-中的图标应用"></a> 1. ant-design 中的图标应用</h2>
+<p><strong>@ant-design/icons-vue</strong>提供了很多<a target="_blank" rel="noopener" href="https://2x.antdv.com/components/icon/#Icon">图标组件</a><br />
+在 vue 组件中使用可以直接通过:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">StepBackwardOutlined</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@ant-design/icons-vue&quot;</span>;<br><br><span class="hljs-comment">// 使用</span><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">StepBackwardOutlined</span> /&gt;</span></span>;<br></code></pre></td></tr></table></figure>
+<p>但在某些情况下, 比如菜单组件, 侧边栏组件, 想要直接通过<code>className</code>来获取图标就可以参考文档中<strong>Custom Font Icon</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> &#123; createFromIconfontCN &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@ant-design/icons-vue&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; defineComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">MyIcon</span> = <span class="hljs-title function_">createFromIconfontCN</span>(&#123;<br>	<span class="hljs-attr">scriptUrl</span>: <span class="hljs-string">&#x27;//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js&#x27;</span>, <span class="hljs-comment">// generated by iconfont.cn</span><br>&#125;);<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineComponent</span>(&#123;<br>	<span class="hljs-attr">props</span>: &#123;<br>		<span class="hljs-attr">className</span>: <span class="hljs-title class_">String</span>,<br>	&#125;;<br>	<span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyIcon</span> <span class="hljs-attr">:type</span>=<span class="hljs-string">&quot;className&quot;</span> /&gt;</span></span>;<br>	&#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>官方提供了这样的组件, 其中<code>type</code>属性即类名. <strong>createFromIconfontCN</strong>的<code>scriptUrl</code>参数可以在<a target="_blank" rel="noopener" href="https://www.iconfont.cn/">iconfont.cn</a>sh 获取自定义的 js 链接.<br />
+也可以不传入<code>scriptUrl</code>, 直接在入口 html 文件中全局引入, 在博主项目中便是这样设置的.</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">const</span> <span class="hljs-title class_">MyIcon</span> = <span class="hljs-title function_">createFromIconfontCN</span>(&#123;<br>  <span class="hljs-attr">scriptUrl</span>: <span class="hljs-string">&quot;&quot;</span>,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;&lt;%= BASE_URL %&gt;iconfont.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>根据路由生成简单菜单栏的简单路由示例, 其中通过设置<strong>meta</strong>的<code>icon</code>属性作为图标的<code>className</code>:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">RouteRecordRaw</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue-router&quot;</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-attr">ROUTES</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">RouteRecordRaw</span>&gt; = [<br>  &#123;<br>    <span class="hljs-attr">path</span>: <span class="hljs-string">&quot;/content/management&quot;</span>,<br>    <span class="hljs-attr">name</span>: routeName,<br>    <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span><br>      <span class="hljs-title function_">import</span>(<br>        <span class="hljs-comment">/* webpackMode: &quot;lazy&quot; */</span> <span class="hljs-comment">/* webpackPrefetch: true */</span> <span class="hljs-comment">/* webpackChunkName: &quot;prom-material&quot; */</span> <span class="hljs-string">&quot;@/views/list.vue&quot;</span><br>      ),<br>    <span class="hljs-attr">meta</span>: &#123;<br>      <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;标题&quot;</span>,<br>      <span class="hljs-attr">icon</span>: <span class="hljs-string">&quot;icon-folder-fill&quot;</span>,<br>    &#125;,<br>  &#125;,<br>];<br></code></pre></td></tr></table></figure>
+<h2 id="2-部署-vue-项目后对-nginx-的进一步了解"><a class="markdownIt-Anchor" href="#2-部署-vue-项目后对-nginx-的进一步了解"></a> 2. 部署 vue 项目后对 nginx 的进一步了解</h2>
+<p>首先需要搞清楚<strong>nginx</strong>中的<code>root</code>和<code>alias</code>, 区别在于:</p>
+<ol>
+<li>对于<strong>location</strong>后面的 uri 的解析<br />
+<code>root</code>的处理结果为 root 路径+请求的 uri 路径<br />
+<code>alias</code>的处理结果为 alias 路径覆盖 location 路径+请求 uri 剩余的路径</li>
+<li><code>alias</code>结尾必须要带上<code>/</code>, <code>root</code>结尾则可有可无.</li>
+</ol>
+<p>对于以下 nginx 配置:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">root</span> /www/data/dist/;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果请求 URI 为<code>/editor/abc</code>, 最终 nginx 查找的路径为<code>/www/data/dist/editor/abc</code>.</p>
+<p>对于以下 nginx 配置:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果请求 URI 为<code>/editor/abc</code>, 最终 nginx 查找的路径为<code>/www/data/dist/abc</code>.</p>
+<p>nginx 中的<code>index</code>, nginx 在上述的种种路径中没找到对应的文件, 默认情况下会在后面加上个<code>/index</code>继续找<code>/www/data/dist/abc/index</code>, 可以通过配置<code>index</code>告诉 nginx index 的含义.</p>
+<p>对于以下 nginx 配置:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>	<span class="hljs-attribute">index</span> index.html index.shtml;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>请求 uri 为<code>/editor/abc</code>, nginx 在<code>/www/data/dist/abc</code>路径找不到文件时, 会继续找<code>/www/data/dist/abc/index.html</code>及<code>/www/data/dist/abc/index.shtml</code>, 还是找不到则返回<strong>404</strong>.</p>
+<p>nginx 中的<code>autoindex</code>, 是否允许查看文件夹, 默认是<code>off</code>.</p>
+<p>对于以下 nginx 配置:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>	<span class="hljs-attribute">autoindex</span> <span class="hljs-literal">on</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>请求 uri 为<code>/editor/abc</code>, nginx 如果发现<code>/www/data/dist/abc</code>是个文件夹, 浏览器会返回目录结构类似下图:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1669723364169_608.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>最后就是记录使用<strong>history</strong>模式 vue-router 的 vue 项目<code>npm run build</code>后的构建产物发布到线上机器后的 nginx 配置.<br />
+首先我们知道默认情况下 vue 是 SPA 单页面应用, 其中的路由跳转都是通过 H5 提供的<code>history.pushState()</code>进行跳转. 假设构建产物现在发布在<code>/www/data/dist</code>目录, 目录结构:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs stylus">dist<br>├── css<br>├── favicon<span class="hljs-selector-class">.ico</span><br>├── iconfont<span class="hljs-selector-class">.js</span><br>├── <span class="hljs-selector-tag">img</span><br>├── index<span class="hljs-selector-class">.html</span><br>└── js<br></code></pre></td></tr></table></figure>
+<p>对于以下路由:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">const</span> <span class="hljs-attr">ROUTES</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">RouteRecordRaw</span>&gt; = [<br>  &#123;<br>    <span class="hljs-attr">path</span>: <span class="hljs-string">&quot;/dashboard/list&quot;</span>,<br>    <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">import</span>(<span class="hljs-string">&quot;&quot;</span>),<br>  &#125;,<br>];<br><br><span class="hljs-keyword">const</span> router = <span class="hljs-title function_">createRouter</span>(&#123;<br>  <span class="hljs-attr">history</span>: <span class="hljs-title function_">createWebHistory</span>(),<br>  <span class="hljs-attr">routes</span>: <span class="hljs-variable constant_">ROUTES</span>,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>如果是根路径下的 nginx 配置, 网上都是教你这么配的:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> / &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>	<span class="hljs-attribute">try_files</span> <span class="hljs-variable">$uri</span>/ /index.html;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>请求 uri 为<code>/dashboard/list</code>, 我曾经以为的 nginx 解析逻辑是:</p>
+<ol>
+<li>匹配到<code>/</code>, 查找<code>/www/data/dist/dashboard/list</code></li>
+<li>没找到对应文件, 后面加上<code>/index</code>找, 还是没找着</li>
+<li>通过<strong>try_file</strong>一次查找<code>/www/data/dist/</code>, <code>/www/data/dist/index.html</code></li>
+<li>找到对应文件返回给浏览器</li>
+<li>浏览器通过 html 引入的 js 中的路由规则跳转到<code>/dashboard/list</code></li>
+</ol>
+<p>于是在新项目以下路由也使用用了对应 nginx 配置:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">const</span> router = <span class="hljs-title function_">createRouter</span>(&#123;<br>  <span class="hljs-attr">history</span>: <span class="hljs-title function_">createWebHistory</span>(<span class="hljs-string">&quot;/editor&quot;</span>),<br>  <span class="hljs-attr">routes</span>: <span class="hljs-variable constant_">ROUTES</span>,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>非跟路径的 nginx 配置:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>	<span class="hljs-attribute">try_files</span> <span class="hljs-variable">$uri</span>/ /index.html;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>事实是这样配置直接访问 uri 为<code>/editor/dashboard/list</code>时会返回<strong>404</strong>, 原因是 nginx 的<code>try_file</code>属性的 N 个值中, 前面 N-1 个值的搜索逻辑和上述第 3 点一致, 但是对于第 N 个值, nginx 会进行<strong>内部重定向</strong>, 例子中即会对<code>/index.html</code>重新进行匹配, 但是并没有对<strong>location / {}</strong> 的配置, 所以得到 404 结果.</p>
+<p>正确的 nginx 配置类似:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs diff">location /editor/ &#123;<br>	alias /www/data/dist/;<br><span class="hljs-deletion">-   try_files $uri/ /index.html;</span><br><span class="hljs-addition">+   try_files $uri/ /editor/index.html;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>根据上面的分析, 我们知道 nginx 的<code>try_files</code>对<code>/editor/index.html</code>内部重定向, 重新匹配<strong>location /editor/ {}</strong> 拿到<strong>index.html</strong>, 返回给浏览器, 通过 vue-router 正常路由跳转.</p>
+<p>查找 StackOverflow 时发现一种写法, 也是好使的, 不清楚内部原因, 希望有了解的同学能解释一下</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> /editor/ &#123;<br>	<span class="hljs-attribute">alias</span> /www/data/dist/;<br>	<span class="hljs-attribute">try_files</span> <span class="hljs-variable">$uri</span>/ /index.html <span class="hljs-literal">last</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="3-tar-命令"><a class="markdownIt-Anchor" href="#3-tar-命令"></a> 3. tar 命令</h2>
+<ul>
+<li>项目发布上线需要编写打包的 shell 脚本给容器执行, 发现了个 tar 的参数<code>--remove-files</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar --zcvf node_modules.tar.gz node_modules --remove-files<br></code></pre></td></tr></table></figure>
+<p>会在压缩成 tar.gz 包后将源文件夹删除, 就不用使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar --zcvf node_modules.tar.gz node_modules<br><span class="hljs-built_in">rm</span> -rf xxx<br></code></pre></td></tr></table></figure>
+<ul>
+<li>运行以下解压命令时报错 tar: write err</li>
+<li></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tar -zxvf node_module.tar.gz node_modules<br></code></pre></td></tr></table></figure>
+<p>tar 中<code>-v</code>是输出打包内容, 如果内容过长, 在某些机器上会报 tar: write err, 所以建议不加上这个参数</p>
+<h2 id="4-du-sh"><a class="markdownIt-Anchor" href="#4-du-sh"></a> 4. du -sh</h2>
+<p><code>ls -lh</code> 可以显示当前文件夹下各文件大小, 但是显示文件夹大小并没有包含文件夹内部文件大小<br />
+<code>du -sh</code>用于显示文件夹及内部文件的总大小<br />
+<code>-s</code>只显示当前文件夹大小, 不显示文件夹内部文件夹大小;<br />
+<code>-h</code>以 <strong>K</strong>, <strong>M</strong>, <strong>G</strong> 这类容易理解的单位显示大小</p>
+<h2 id="5-multiple-commit-message-in-windows"><a class="markdownIt-Anchor" href="#5-multiple-commit-message-in-windows"></a> 5. multiple commit message in windows</h2>
+<p>windows 系统下默认不支持以下方式 commit 多行信息:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs node">execSync(`git commit -m &quot;$&#123;commitMessage&#125;&quot;`);<br></code></pre></td></tr></table></figure>
+<p><code>commitMessage</code>如果为多行, linux/macos 下能够正常执行, windows 下会将除第一行外内容截断.</p>
+<p>但是经过测试所有系统下都支持一下方式 commit 多行信息, <code>commitMessage</code>为单行信息:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs node">execSync(`git commit -m &quot;$&#123;commitMessage&#125;&quot; -m &quot;$&#123;commitMessage&#125;&quot;`);<br></code></pre></td></tr></table></figure>
+<p>上述的<code>&quot;$&#123;commitMessage&#125;&quot;</code>两边必须加上 quote.</p>
+<h2 id="6-env"><a class="markdownIt-Anchor" href="#6-env"></a> 6. .env</h2>
+<p>npm 库<strong>dot-env</strong>支持在本地配置<code>.env</code>文件, 并将键值挂载到<code>process.env</code>上, 但是对于某些符号字符, 默认会被截断导致读取配置时出错.<br />
+例如以下配置:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">NODE_CONFIG_DIR</span>=./env<br><span class="hljs-attr">NODE_ENV</span>=development<br><span class="hljs-attr">SIGN</span>=P2E<span class="hljs-comment">#xWehFZc</span><br></code></pre></td></tr></table></figure>
+<p>读取<strong>SIGN</strong>时会将#后面的阶段, 导致<strong>SIGN</strong>的值变为<code>P2</code>, 这种情况在两边加上 quote 即可解决:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">SIGN</span>=<span class="hljs-string">&#x27;P2E#xWehFZc&#x27;</span><br></code></pre></td></tr></table></figure>
+<h2 id="iframe"><a class="markdownIt-Anchor" href="#iframe"></a> iframe</h2>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// 父页面 -&gt; 子页面, iframe为iframe DOM节点</span><br>iframe.<span class="hljs-property">contentWindow</span>.<span class="hljs-title function_">postMessage</span>(data, &#123;&#125;);<br><span class="hljs-comment">// 子页面 -&gt; 父页面</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">parent</span>.<span class="hljs-title function_">postMessage</span>(data, &#123;&#125;);<br></code></pre></td></tr></table></figure>
+<h1 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h1>
+<h2 id="1-cannot-find-module-pm2libprocesscontainerforkjs"><a class="markdownIt-Anchor" href="#1-cannot-find-module-pm2libprocesscontainerforkjs"></a> 1. cannot find module pm2/lib/ProcessContainerFork.js</h2>
+<p><code>rm -rf ~/.pm2</code></p>
+<h2 id="2-浏览器-img-请求图片时-403"><a class="markdownIt-Anchor" href="#2-浏览器-img-请求图片时-403"></a> 2. 浏览器 img 请求图片时 403</h2>
+<p>html 文件<code>&lt;head&gt;</code>加上<code>&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot; /&gt;</code>, 因为某些服务器会检测请求头的<strong>referer</strong>, 所以需要设置请求时不带上<strong>referer</strong>.</p>
+<h2 id="3-less-不支持-additionaldata"><a class="markdownIt-Anchor" href="#3-less-不支持-additionaldata"></a> 3. <strong>less</strong> 不支持 <code>additionalData</code></h2>
+<p><strong>less</strong> v4, <strong>less-loader</strong> v11 不支持<code>additionalData</code>, <strong>less</strong> v5, <strong>less-loader</strong> v12 之后新增 breaking change, 才支持<code>additionalData</code>, 才可以像<strong>sass-loader</strong>一样在 css 文件开头插入字符串.<br />
+vue.config.js 中配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-attr">css</span>: &#123;<br>    <span class="hljs-attr">loaderOptions</span>: &#123;<br>      <span class="hljs-attr">less</span>: &#123;<br>        <span class="hljs-attr">addtionalData</span>: <span class="hljs-string">`@import &#x27;@/style/global.less&#x27;`</span>,<br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fengff/p/12015858.html">nginx 的 location、root、alias 指令用法和区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/49072584/vue-router-nginx-and-direct-link">vue-router, nginx and direct link</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_10546390/1754757">Nginx 的 try_files 参数保证能懂的讲解</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Unitech/pm2/issues/1943">cannot find module pm2/lib/ProcessContainerFork.js</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/15075783/add-line-break-to-git-commit-m-from-command-line-on-windows">Add line break to git commit -m from command line on Windows</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/55703950/export-env-with-special-characters">Export .env with special characters</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B7%A5%E4%BD%9C/">#工作</a>
+      
+        <a href="/tags/%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">#问题记录</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>前端工作日常问题和易忘点记录</div>
+      <div>https://mariana-yui.github.io/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/20/2023-04-20-server-via-nestjs-summary/" title="nestjs开发及流水线相关问题记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">nestjs开发及流水线相关问题记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/23/2022-10-23-study-webpack-day10/" title="webpack学习笔记(10)">
+                        <span class="hidden-mobile">webpack学习笔记(10)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/';
+          this.page.identifier = '/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

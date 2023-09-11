@@ -1,0 +1,968 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学习笔记  watch 本节之前如果要运行打包产物, 博主都需要执行两步:  webpack 打包代码 使用 VSCode 插件 live-server 打开 5500 端口查看网页  webpack 提供了watch参数监听文件变化自动执行打包命令, 可以通过: webpack --watch 或者在 webpack.config.js 中配置 watch: true 即使这样做依旧存在几个问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack学习笔记(7)">
+<meta property="og:url" content="https://mariana-yui.github.io/2022/09/30/2022-09-30-study-webpack-day7/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="学习笔记  watch 本节之前如果要运行打包产物, 博主都需要执行两步:  webpack 打包代码 使用 VSCode 插件 live-server 打开 5500 端口查看网页  webpack 提供了watch参数监听文件变化自动执行打包命令, 可以通过: webpack --watch 或者在 webpack.config.js 中配置 watch: true 即使这样做依旧存在几个问">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-09-30-study-webpack-day7.png">
+<meta property="article:published_time" content="2022-09-30T08:36:19.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.011Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-09-30-study-webpack-day7.png">
+  
+  
+  
+  <title>webpack学习笔记(7) - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2022-09-30-study-webpack-day7.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="webpack学习笔记(7)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-30 16:36" pubdate>
+          Created: 2022年09月30日 下午 16:36
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          9.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          79 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">webpack学习笔记(7)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="学习笔记"><a class="markdownIt-Anchor" href="#学习笔记"></a> 学习笔记</h1>
+<h2 id="watch"><a class="markdownIt-Anchor" href="#watch"></a> watch</h2>
+<p>本节之前如果要运行打包产物, 博主都需要执行两步:</p>
+<ol>
+<li><code>webpack</code> 打包代码</li>
+<li>使用 VSCode 插件 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">live-server</a> 打开 5500 端口查看网页</li>
+</ol>
+<p>webpack 提供了<code>watch</code>参数监听文件变化自动执行打包命令, 可以通过:</p>
+<p><code>webpack --watch</code></p>
+<p>或者在 webpack.config.js 中配置</p>
+<p><code>watch: true</code></p>
+<p>即使这样做依旧存在几个问题:</p>
+<ol>
+<li>每次变更时都是全部文件打包, 没有变更的文件也会重新打包</li>
+<li>打包结果会写入文件系统即本地磁盘, 读取文件系统速率相对较慢</li>
+<li>live-server 插件只能在 vscode 中使用</li>
+<li>每次都会刷新整个页面, 无法保留页面当前状态</li>
+</ol>
+<p>那存在上述这些问题, 有没有工具能够解决呢? 有的.</p>
+<h2 id="webpack-dev-server"><a class="markdownIt-Anchor" href="#webpack-dev-server"></a> webpack-dev-server</h2>
+<p>webpack 提供了<code>webpack-dev-server</code>工具来解决上述问题, 我们一个一个阐述.</p>
+<p>安装:</p>
+<p><code>yarn add -D webpack-dev-server</code></p>
+<p>安装完<code>webpack-dev-server</code>后就不需要安装<code>live-server</code>插件, 也不需要执行上述两步了, 直接运行:</p>
+<p><code>webpack serve</code></p>
+<p><code>web-pack-dev-server</code>内置了 express 服务监听文件变更, 并且只会打包变更文件, 并通过 websocket 通知浏览器刷新页面, 这样就解决上述<strong>问题 1</strong> 和 <strong>问题 3</strong>.</p>
+<p>并且, <code>webpack-dev-server</code>使用<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/memfs">memfs</a>将打包产物赋值给变量直接写入内存中, 提升了读取效率, 解决<strong>问题 2</strong>.</p>
+<h3 id="customize-webpack-dev-server"><a class="markdownIt-Anchor" href="#customize-webpack-dev-server"></a> customize webpack-dev-server</h3>
+<p><code>webpack-dev-server</code>默认使用 express 本地启动一个服务, ~~如果你想的话, ~~也可以自定义一个服务. <strong>当然在项目中不建议这么做, 因为默认的服务中还存在 HMR 等重要特性, 使用默认服务即可.</strong> 这里举个自定义的简单例子.</p>
+<p>安装必要包:</p>
+<p><code>yarn add -D express webpack-dev-middleware</code></p>
+<p>然后添加以下逻辑, 将<strong>webpack</strong>生成的<strong>compiler</strong>交由<strong>webpackDevMiddleware</strong>处理:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// server,js</span><br><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);<br><span class="hljs-keyword">const</span> webpackDevMiddleware = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;webpack-dev-middleware&quot;</span>);<br><span class="hljs-keyword">const</span> webpack = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;webpack&quot;</span>);<br><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./webpack.config&quot;</span>);<br><br><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>();<br><span class="hljs-keyword">const</span> compiler = <span class="hljs-title function_">webpack</span>(config);<br><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">webpackDevMiddleware</span>(compiler));<br><br>app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">8080</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;server is running on port 8080&quot;</span>);<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>最后执行<code>node server.js</code>, 访问 8080 端口即可看到页面.</p>
+<p>事实上, <code>webpack-dev-server</code>内置了<code>webpack-dev-middleware</code>, 也是通过上述的方式将<strong>compiler</strong>交由中间件托管, 只不过实现上更复杂.</p>
+<h2 id="hmr"><a class="markdownIt-Anchor" href="#hmr"></a> HMR</h2>
+<p>全程<strong>Hot Module Replacement</strong>, <code>webpack-dev-server</code>同样内置了该特性旨在解决<strong>问题 4</strong>.</p>
+<p><code>webpack-dev-server</code>默认没有启动 HMR, 需要手动配置:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-attr">devServer</span>: &#123;<br>    <span class="hljs-attr">hot</span>: <span class="hljs-literal">true</span>,<br>  &#125;,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>配置完需要在入口文件底部插入 HMR 逻辑, 通知<code>webpack-dev-server</code>哪些文件变更需要触发热更新, 不要用 optional chain</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (<span class="hljs-variable language_">module</span>.<span class="hljs-property">hot</span>) &#123;<br>  <span class="hljs-variable language_">module</span>.<span class="hljs-property">hot</span>.<span class="hljs-title function_">accept</span>([<span class="hljs-string">&quot;./math.js&quot;</span>], <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;hmr executed.&quot;</span>);<br>  &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>HMR 的实现原理还是很有意思的, 这里推荐阅读<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30669007">HMR 原理解析</a>, 深刻描述了 HMR 在<code>webpack-dev-server</code>中的实现原理.<s>比我叭叭叭讲强多了</s></p>
+<h2 id="在框架中使用-hmr"><a class="markdownIt-Anchor" href="#在框架中使用-hmr"></a> 在框架中使用 HMR</h2>
+<p>在实践过程中发现的问题, 这里强调一下.<br />
+jsx 文件或者是 vue 文件, 需要在文件内模块导出, 然后在入口文件导入模块并使用<code>import Cmp from 'cmp.xxx'</code>; 而不是直接在模块中执行完所有逻辑, 在入口文件简单<code>import 'cmp.xxx';</code>, 这样做<strong>HMR</strong>不会生效, 只会直接 location.reload().</p>
+<h3 id="hmr-in-react"><a class="markdownIt-Anchor" href="#hmr-in-react"></a> HMR in React</h3>
+<p>安装 HMR 需要的包:</p>
+<p><code>yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh</code></p>
+<p>React 热更新的这些插件只能在开发环境(development)使用, 生产环境(production)打包时需要会报错, 所以这里通过<code>process.env.NODE_ENV</code>判断环境动态添加插件:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//...</span><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">ReactRefreshWebpackPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;@pmmmwh/react-refresh-webpack-plugin&quot;</span>);<br><br><span class="hljs-keyword">const</span> isDevelopment = process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> !== <span class="hljs-string">&quot;production&quot;</span>;<br><br><span class="hljs-keyword">const</span> plugins = [<br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">CleanWebpackPlugin</span>(),<br>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlWebpackPlugin</span>(&#123;<br>    <span class="hljs-attr">template</span>: <span class="hljs-string">&quot;./index.html&quot;</span>,<br>    <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;Day7 p2&quot;</span>,<br>  &#125;),<br>];<br>isDevelopment &amp;&amp; plugins.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ReactRefreshWebpackPlugin</span>());<br><br><span class="hljs-keyword">const</span> babelPlugins = [];<br>isDevelopment &amp;&amp; babelPlugins.<span class="hljs-title function_">push</span>(<span class="hljs-string">&quot;react-refresh/babel&quot;</span>);<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  <span class="hljs-attr">module</span>: &#123;<br>    <span class="hljs-attr">rules</span>: [<br>      &#123;<br>        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.jsx?$/i</span>,<br>        <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>,<br>        <span class="hljs-attr">use</span>: [<br>          &#123;<br>            <span class="hljs-attr">loader</span>: <span class="hljs-string">&quot;babel-loader&quot;</span>,<br>            <span class="hljs-attr">options</span>: &#123;<br>              <span class="hljs-attr">plugins</span>: babelPlugins,<br>            &#125;,<br>          &#125;,<br>        ],<br>      &#125;,<br>      <span class="hljs-comment">//...</span><br>    ],<br>  &#125;,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h3 id="hmr-in-vue"><a class="markdownIt-Anchor" href="#hmr-in-vue"></a> HMR in Vue</h3>
+<p>安装 HMR 依赖的包:</p>
+<p><code>yarn add -D vue-loader</code></p>
+<p>Vue 热更新依赖的插件没有环境的问题, 直接在配置中添加即可:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs diff">//...<br>const ReactRefreshWebpackPlugin = require(&#x27;@pmmmwh/react-refresh-webpack-plugin&#x27;);<br><span class="hljs-addition">+ const &#123; VueLoaderPlugin &#125; = require(&#x27;vue-loader&#x27;);</span><br><br>const isDevelopment = process.env.NODE_ENV !== &#x27;production&#x27;;<br><br>const plugins = [<br>  new CleanWebpackPlugin(),<br>  new HtmlWebpackPlugin(&#123;<br>    template: &#x27;./index.html&#x27;,<br>    title: &#x27;Day7 p2&#x27;,<br>    filename: &#x27;page/index.html&#x27;,<br>  &#125;),<br><span class="hljs-addition">+ new VueLoaderPlugin(),</span><br>];<br>isDevelopment &amp;&amp; plugins.push(new ReactRefreshWebpackPlugin());<br><br>const babelPlugins = [];<br>isDevelopment &amp;&amp; babelPlugins.push(&#x27;react-refresh/babel&#x27;);<br><br>module.exports = &#123;<br>  //...<br>  module: &#123;<br>    rules: [<br>      &#123;<br>        test: /\.jsx?$/i,<br>        exclude: /node_modules/,<br>        use: [<br>          &#123;<br>            loader: &#x27;babel-loader&#x27;,<br>            options: &#123;<br>              plugins: babelPlugins,<br>            &#125;,<br>          &#125;,<br><span class="hljs-addition">+         &#123;</span><br><span class="hljs-addition">+	        test: /\.vue$/i,</span><br><span class="hljs-addition">+	        use: &#x27;vue-loader&#x27;,</span><br><span class="hljs-addition">+	      &#125;,</span><br>        ],<br>      &#125;,<br>      //...<br>    ]<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>具体 React/Vue 组件逻辑及入口文件引用逻辑查看示例代码.</p>
+<h2 id="publicpath-path-contentbase-in-webpack5"><a class="markdownIt-Anchor" href="#publicpath-path-contentbase-in-webpack5"></a> publicPath, path, contentBase in webpack5</h2>
+<p>webpack5 之前对这些配置的介绍可以参考: [[2021-06-25-path-publicPath-contentBase]]</p>
+<h3 id="publicpath"><a class="markdownIt-Anchor" href="#publicpath"></a> publicPath</h3>
+<p>publicPath 在 output 和 devServer 中配置的含义完全不同.</p>
+<h4 id="in-output"><a class="markdownIt-Anchor" href="#in-output"></a> in output</h4>
+<p>在 output 中, publicPath 表示 html 中引入文件路径的前缀, 并以<code>$&#123;publicPath&#125;$&#123;文件名&#125;</code>的字符串写入 html 中, publicPath 默认值为<code>''</code>.</p>
+<p>在开发环境中, 通过<code>webpack-dev-server</code>启动的服务使得能够在浏览器中通过 http 访问 html 文件.<br />
+此时可以配置绝对路径(事实上也更推荐配置绝对路径), 例如:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">output</span>: &#123;<br>    <span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;bundle.js&#x27;</span>,<br>    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&#x27;./build&#x27;</span>),<br>    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">&#x27;/page&#x27;</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>devServer 无相应配置, devServer 中的 publicPath 默认会使用 output 的 publicPath.</p>
+<p>此时运行<code>webpack server</code>, 可以在浏览器看到拼接的文件路径, html 正常展示</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664697147057_929.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>使用相对路径, 真正打包到文件系统时才建议使用相对路径, 因为打包到文件系统后浏览器打开是<code>file://</code>协议, 如果使用的是绝对路径拼接后就变成<code>file:///bundle.js</code>, 找不到对应文件.<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664422677000_2677.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>实际上, 生产环境下更多的也也是使用 CDN 域名前缀, 而不是相对路径.</p>
+<p>开发环境下要用相对路径也可以用, 只是会徒增心智负担.<br />
+output 中 publicPath 使用相对路径时, <strong>devServer 中必须配置绝对路径</strong>, 原因后续解释, 先看下不这样做的后果, 先将 devServer 注释掉:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">output</span>: &#123;<br>    <span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;bundle.js&#x27;</span>,<br>    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&#x27;./build&#x27;</span>),<br>    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">&#x27;./&#x27;</span>,<br>&#125;,<br><span class="hljs-attr">devServer</span>: &#123;<br>    <span class="hljs-attr">hot</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">devMiddleware</span>: &#123;<br>      <span class="hljs-comment">// publicPath: &#x27;/&#x27;</span><br>    &#125;<br>&#125;,<br></code></pre></td></tr></table></figure>
+<p>重新执行<code>webpack serve</code>, 浏览器显示:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664697803627_9616.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>将 devServer 的 publicPath 放开:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs diff">output: &#123;<br>    filename: &#x27;bundle.js&#x27;,<br>    path: path.resolve(__dirname, &#x27;./build&#x27;),<br>    publicPath: &#x27;./&#x27;,<br>&#125;,<br>devServer: &#123;<br>    hot: true,<br>    devMiddleware: &#123;<br><span class="hljs-deletion">-      // publicPath: &#x27;/&#x27;</span><br><span class="hljs-addition">+      publicPath: &#x27;/&#x27;</span><br>    &#125;<br>&#125;,<br></code></pre></td></tr></table></figure>
+<p>执行<code>webpack serve</code>, 此时浏览器显示正常:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664697915112_1455.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h4 id="in-devserver"><a class="markdownIt-Anchor" href="#in-devserver"></a> in devServer</h4>
+<p>webpack5 中在 devServe 配置 publicPath 和 webpack4 的区别:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs diff">devServer: &#123;<br>  hot: true,<br><span class="hljs-deletion">- publicPath: &#x27;/&#x27;,</span><br><span class="hljs-addition">+ // webpack5</span><br><span class="hljs-addition">+ devMiddleware: &#123;</span><br><span class="hljs-addition">+   publicPath: &#x27;/&#x27;</span><br><span class="hljs-addition">+ &#125;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>前面说过, devServer 通过<code>memfs</code>在内存中创建了类似静态文件服务, 使内存中的文件能够正常通过 http 访问, 所以 devServer 中的 publicPath 相当于 http 请求获取静态文件所需的前缀, 这就解释了以下几个问题:</p>
+<ul>
+<li>devServer 的 publicPath 为什么最好和 output 的 publicPath 保持一致? 如果静态文件服务中文件路径为<code>/asset/bundle.js</code>, 而 html 中请求的文件路径为<code>/bundle.js</code>, 自然请求不到对应文件</li>
+<li>devServer 的 publicPath 为什么不能为相对路径? http 请求链接的前缀又怎么能是相对路径呢?</li>
+<li>为什么 devServer 的 publicPath 开头结尾都需要带上<code>/</code>, 我理解是为了相对路径服务的(如果有错请忽略), 如果 devServer 的 publicPath 配置的是<code>/asset</code>, output 的 publicPath 配置<code>./</code>, 请求会变为<code>/bundle.js</code>, 只有配置为<code>/asset/</code>时, 请求才是<code>/asset/bundle.js</code>正常返回.</li>
+</ul>
+<p>当然, 对于<code>HtmlWebpackPlugin</code>插件, <code>filename</code>选项也可以配置路径+文件, 配合 publicPath 的相对路径理解起来就更繁琐了.</p>
+<h4 id="总结一下-publicpath"><a class="markdownIt-Anchor" href="#总结一下-publicpath"></a> 总结一下 publicPath</h4>
+<p>使用 publicPath 遵循以下几点:</p>
+<ol>
+<li>devServer 的 publicPath 和 output 的 publicPath 推荐保持一致, 或者不配置 devServer 的 publicPath</li>
+<li>开发环境配置 publicPath 最好开头结尾都带上<code>/</code>, 并且浏览器访问时也要结尾也要带上</li>
+<li>开发环境下最好不要使用相对路径</li>
+<li>如果打包产物根据文件类型需要不提供文件夹区分, 可以直接配置对应的 filename</li>
+<li><s>配置 webpack.config.js 的时候你最好知道你在干什么</s></li>
+</ol>
+<h3 id="contentbase"><a class="markdownIt-Anchor" href="#contentbase"></a> ContentBase</h3>
+<p>照例介绍下 webpack5 对 ContentBase 的 breaking change:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs diff">devServer: &#123;<br><span class="hljs-deletion">-  contentBase: path.resolve(__dirname, &#x27;.yui&#x27;),</span><br><span class="hljs-addition">+  static: &#123;</span><br><span class="hljs-addition">+    directory: path.resolve(__dirname, &#x27;./yui&#x27;),</span><br><span class="hljs-addition">+  &#125;</span><br>&#125;,<br></code></pre></td></tr></table></figure>
+<p>contentBase 比较好理解, 不是直接通过入口文件引入的文件, 或者是入口文件关联文件中又关联的文件, devServer 就会到 ContentBase 配置的文件目录下寻找. 举个例子:</p>
+<p>在 html 文件中引入 js 文件,该文件和入口文件没有直接关系, 这里要使用绝对路径, 否则会通过 publicPath 查找:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs diff">&lt;body&gt;<br>  &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;<br>  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;<br><br><span class="hljs-addition">+ &lt;script src=&quot;/test.js&quot;&gt;&lt;/script&gt;</span><br>&lt;/body&gt;<br></code></pre></td></tr></table></figure>
+<p>并且新建<code>yui/test.js</code>文件, 添加输出:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;这是个Test文件&quot;</span>);<br></code></pre></td></tr></table></figure>
+<p>首先注释掉 contentBase, <strong>contentBase 不能配置为&quot;&quot;</strong>, 运行<code>webpack serve</code>:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664701555781_1130.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到默认 contentBase 搜索的文件夹是 public, 浏览器显示:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664701719247_6132.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>然后将 contentBase 放开, 运行<code>webpack serve</code>:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664701782697_3793.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到显示正常了.</p>
+<h2 id="devserver-其他的常用配置"><a class="markdownIt-Anchor" href="#devserver-其他的常用配置"></a> devServer 其他的常用配置</h2>
+<h3 id="hotonly"><a class="markdownIt-Anchor" href="#hotonly"></a> hotOnly</h3>
+<p>热更新时模块代码报错, 修复后默认会刷新页面; hotOnly 保证报错修复仍然是热更新.</p>
+<p><strong>Breaking change</strong> webpack4 -&gt; webpack5:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-  hotOnly: true,</span><br><span class="hljs-addition">+  hot: &#x27;only&#x27;, // hot: true</span><br></code></pre></td></tr></table></figure>
+<h3 id="compress"><a class="markdownIt-Anchor" href="#compress"></a> compress</h3>
+<p>请求的文件以 gzip 形式压缩后返回</p>
+<h3 id="host"><a class="markdownIt-Anchor" href="#host"></a> host</h3>
+<p>默认值为<code>localhost(127.0.0.1)</code>, 如果希望其他地方也可以访问, 可以设置为<code>0.0.0.0</code></p>
+<h3 id="open"><a class="markdownIt-Anchor" href="#open"></a> open</h3>
+<p>可以配置指定浏览器打开指定页面.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">open</span>: &#123;<br>  <span class="hljs-attr">target</span>: [<span class="hljs-string">&#x27;/asset/page/&#x27;</span>], <span class="hljs-comment">// open multiple pages</span><br>  <span class="hljs-attr">app</span>: &#123;<br>	<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;google-chrome&#x27;</span>,<br>  &#125;<br>&#125;,<br><span class="hljs-comment">// or</span><br><span class="hljs-attr">open</span>: <span class="hljs-literal">true</span>,<br></code></pre></td></tr></table></figure>
+<h3 id="historyapifallback"><a class="markdownIt-Anchor" href="#historyapifallback"></a> historyApiFallback</h3>
+<p>这个比较重要, 在 React/Vue 这类生成 SPA 页面的框架中非常常见, 主要作用是解决 SPA 页面在路由跳转之后, 进行页面刷新时, 返回 404 错误的问题.<br />
+<strong>生产环境下通过 nginx 配置, historyApiFallback 相当于干了开发时 nginx 的活</strong></p>
+<p>和 open 一样有两种方式配置, <code>boolean|object</code>.<br />
+boolean 值默认为<code>false</code>, <code>true</code>页面刷新 404 时跳转<code>/index.html</code>,<br />
+object 值可以配置 rewrites, 根据 404 匹配的路由跳转不同路径</p>
+<p>举个例子, 具体源码查看[[#实例代码]].</p>
+<p>先不配<code>historyApiFallback</code>, 查看 react 路由的跳转:</p>
+<p>当前路径: <code>127.0.0.1/me</code></p>
+<p>展示内容:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664726548640_9042.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>刷新后 404, 因为并没有对应的路径或文件匹配<code>/me</code></p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664726704031_2224.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>配置<code>historyApiFallback</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">historyApiFallback</span>: &#123;<br>  <span class="hljs-attr">rewrites</span>: [&#123; <span class="hljs-attr">from</span>: <span class="hljs-regexp">/about|me/</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">&#x27;/asset/page/&#x27;</span> &#125;],<br>&#125;,<br></code></pre></td></tr></table></figure>
+<p>重新运行<code>webpack serve</code>, 再次刷新当前路由, 刷新也能够正常显示:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664726866345_7520.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="proxy"><a class="markdownIt-Anchor" href="#proxy"></a> proxy</h3>
+<p>这里不做过多解释了, 具体配置可以查阅<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/dev-server/#devserverproxy">官网</a>. 作用主要还是用于解决跨域问题, 不考虑服务端已经对 resHeader 做了跨域处理. 这里列出常用的配置, 使用可以参考[[#示例代码]]:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">devServer</span>: &#123;<br>  <span class="hljs-comment">//...</span><br>  <span class="hljs-attr">proxy</span>: &#123;<br>    <span class="hljs-string">&quot;/api&quot;</span>: &#123;<br>      <span class="hljs-attr">target</span>: <span class="hljs-string">&quot;http://localhost:8888&quot;</span>,<br>      <span class="hljs-attr">pathRewrite</span>: &#123;<br>        <span class="hljs-string">&quot;^/api&quot;</span>: <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-comment">// 正则替换, replace(/^api/, &#x27;&#x27;);</span><br>      &#125;,<br>      <span class="hljs-attr">secure</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 忽略https验证</span><br>      <span class="hljs-attr">changeOrigin</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">//修改Origin为localhost:8888</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>未配置 proxy 前, 浏览器在<code>http://localhost:8080/asset/page/</code>发起跨域请求:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;http://localhost:8888/name&quot;</span>);<br></code></pre></td></tr></table></figure>
+<p>毫无意外浏览器会拦截:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664977295429_8174.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>配置 proxy 后, 修改请求为:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;/api/name&quot;</span>);<br></code></pre></td></tr></table></figure>
+<p>浏览器可以正常返回数据:</p>
+<p><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1664977379895_4155.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>如果对 nginx 有所了解就会发现, devServer 的 proxy 和 historyApiFallback 其实就是充当了生产环境下的 nginx 配置.</p>
+<h2 id="resolve"><a class="markdownIt-Anchor" href="#resolve"></a> resolve</h2>
+<p>resolve 主要是对 import from 的路径做处理, 介绍下 resolve 对象中常用的几个属性.</p>
+<h3 id="modules"><a class="markdownIt-Anchor" href="#modules"></a> modules</h3>
+<p>默认值: <code>node_modules</code><br />
+引入模块的路径分为绝对路径, 相对路径, 模块路径; 绝对路径和相对路径容易理解, 就是根据文件系统或上下文目录查找; 模块路径则是只指定了包名, webpack 会通过<code>resolve.modules</code>指定的目录去查找文件, webpack 是通过<strong>enhanced-resolve</strong>库来进行模块路径查找.</p>
+<h3 id="extensions"><a class="markdownIt-Anchor" href="#extensions"></a> extensions</h3>
+<p>默认值: <code>['.js', '.json', '.wasm']</code><br />
+当 webpack 发现当前路径是文件并且没有后缀名时, 会使用<code>resolve.extensions</code>匹配, 所以对于 React/Vue 这类文件后缀为.jsx/.vue 的路径, 如果不带上后缀默认是会解析失败的, 需要配置:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">resolve</span>: &#123;<br>  <span class="hljs-attr">extensions</span>: [<span class="hljs-string">&quot;.js&quot;</span>, <span class="hljs-string">&quot;.json&quot;</span>, <span class="hljs-string">&quot;.wasm&quot;</span>, <span class="hljs-string">&quot;.jsx&quot;</span>, <span class="hljs-string">&quot;.vue&quot;</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="mainfiles"><a class="markdownIt-Anchor" href="#mainfiles"></a> mainFiles</h3>
+<p>默认值: <code>index</code><br />
+当 webpack 发现当前路径是文件夹时, 会将<strong>resolve.mainFiles</strong>补充在路径后面, 然后通过<strong>resolve.extensions</strong>匹配文件.</p>
+<h3 id="alias"><a class="markdownIt-Anchor" href="#alias"></a> alias</h3>
+<p>type: <code>object</code><br />
+当路径使用频率高并且长时, 可以配置<code>resolve.alias</code>简化输入, Vue 脚手架就将<code>@</code>作为<code>path.resolve(__dirname, './src')</code>的别名.</p>
+<h1 id="实例代码"><a class="markdownIt-Anchor" href="#实例代码"></a> 实例代码</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day7">https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day7</a></p>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30669007">Webpack HMR 原理解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/facebook/react/issues/16604">How should we set up apps for HMR now that Fast Refresh replaces react-hot-loader?</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/pmmmwh/react-refresh-webpack-plugin">React 热更新依赖</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43048301/article/details/121554459">Webpack5 中 devServer 配置 contentBase 报错的问题</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/webpack/" class="category-chain-item">webpack</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/webpack/">#webpack</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>webpack学习笔记(7)</div>
+      <div>https://mariana-yui.github.io/2022/09/30/2022-09-30-study-webpack-day7/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/05/2022-10-05-study-webpack-day8/" title="webpack学习笔记(8)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">webpack学习笔记(8)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/27/2022-09-27-pm2-online-issue-record/" title="pm2线上问题处理记录">
+                        <span class="hidden-mobile">pm2线上问题处理记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2022/09/30/2022-09-30-study-webpack-day7/';
+          this.page.identifier = '/2022/09/30/2022-09-30-study-webpack-day7/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({});
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

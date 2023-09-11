@@ -1,0 +1,850 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 前段时间负责将组内项目接入自动化流水线, 磕磕绊绊最后也算把全流程走通并且在线上稳定运行了, 把过程中遇到到的问题和知识点作用做个记录总结.  nestjs 这里不会介绍 controller, provider 是啥, 应该怎么使用, 这些直接看官方文档就能理解了, 只会记录使用 nestjs 中的问题的解决过程, 官方文档模棱两可的描述以及底层原理的思考.  1. eslint wro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nestjs开发及流水线相关问题记录">
+<meta property="og:url" content="https://mariana-yui.github.io/2023/04/20/2023-04-20-server-via-nestjs-summary/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 前段时间负责将组内项目接入自动化流水线, 磕磕绊绊最后也算把全流程走通并且在线上稳定运行了, 把过程中遇到到的问题和知识点作用做个记录总结.  nestjs 这里不会介绍 controller, provider 是啥, 应该怎么使用, 这些直接看官方文档就能理解了, 只会记录使用 nestjs 中的问题的解决过程, 官方文档模棱两可的描述以及底层原理的思考.  1. eslint wro">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2023-04-20-server-via-nestjs-summary.jpeg">
+<meta property="article:published_time" content="2023-04-20T09:12:02.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.011Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="nestjs">
+<meta property="article:tag" content="nodejs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2023-04-20-server-via-nestjs-summary.jpeg">
+  
+  
+  
+  <title>nestjs开发及流水线相关问题记录 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2023-04-20-server-via-nestjs-summary.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="nestjs开发及流水线相关问题记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-20 17:12" pubdate>
+          Created: 2023年04月20日 下午 17:12
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">nestjs开发及流水线相关问题记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>前段时间负责将组内项目接入自动化流水线, 磕磕绊绊最后也算把全流程走通并且在线上稳定运行了, 把过程中遇到到的问题和知识点作用做个记录总结.</p>
+<h1 id="nestjs"><a class="markdownIt-Anchor" href="#nestjs"></a> nestjs</h1>
+<p>这里不会介绍 controller, provider 是啥, 应该怎么使用, 这些直接看官方文档就能理解了, 只会记录使用 nestjs 中的问题的解决过程, 官方文档模棱两可的描述以及底层原理的思考.</p>
+<h2 id="1-eslint-wrong-error-is-defined-but-never-used"><a class="markdownIt-Anchor" href="#1-eslint-wrong-error-is-defined-but-never-used"></a> 1. eslint wrong error “is defined but never used”</h2>
+<p>初始化项目时遇到 import 所有装饰器例如<code>@Injectable()</code>, <code>@Get()</code>, 并且在对应文件中使用了, eslint 还是会提示**“is defined but never used”**.<br />
+需要把<code>@typescript-eslint/*</code>包升级到 5.35.1 以上</p>
+<h2 id="2-及时更新nestjscli-脚手架"><a class="markdownIt-Anchor" href="#2-及时更新nestjscli-脚手架"></a> 2. 及时更新@nestjs/cli 脚手架</h2>
+<p>使用脚手架初始化项目时, 当引入第三方 Module 时出现了各种各样的问题, 最后发现脚手架<code>@nestjs/cli</code>之前安装的版本是 v7, 而现在最新大版本已经迭代到 v9 了, 很多第三方库版本都已经不兼容旧的脚手架新建的项目, 升级到 v9 后重新初始化项目第三方 Module 引入问题消失.</p>
+<h2 id="3-cachemodule"><a class="markdownIt-Anchor" href="#3-cachemodule"></a> 3. CacheModule</h2>
+<p>这里项目中使用的是 redis, 以此为例:<br />
+在不同模块中引入 CacheModule 的方式:</p>
+<ol>
+<li>app.module.ts 中设置<code>isGlobal: true</code></li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-title class_">CacheModule</span>.<span class="hljs-property">register</span>&lt;<span class="hljs-title class_">RedisClientOptions</span>&gt;(&#123;<br>  <span class="hljs-attr">isGlobal</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">store</span>: redisStore,<br>  ...config.<span class="hljs-property">redis</span>,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>在每个 module 中单独引入, 参数都要带上, 否则会使用默认的内存缓存.</li>
+</ol>
+<h2 id="4-forroutes"><a class="markdownIt-Anchor" href="#4-forroutes"></a> 4. forRoutes</h2>
+<p>指定中间件作用路由时, 不需要加上设置的 prefixPath, 如果想作用路由下所有接口使用<code>/*</code></p>
+<h1 id="linux"><a class="markdownIt-Anchor" href="#linux"></a> linux</h1>
+<p>流水线中难免会有频繁的 linux 操作, 记录用到的命令</p>
+<h2 id="rsync"><a class="markdownIt-Anchor" href="#rsync"></a> rsync</h2>
+<p>同步文件, 和<code>cp</code>类似, 但是可以通过参数过滤不复制的文件.<br />
+常用的参数:</p>
+<p><code>-a, --archive</code>: 归档模式，表示以递归方式传输文件，并保持所有文件属性<br />
+<code>--exclude-from</code>: 这是选择<code>rsync</code>而不是<code>cp</code>的最大原因, 该配置能够在复制文件时指定过滤的文件.<br />
+<code>--exclude</code>: 指定排除不需要传输的文件模式, 例如<code>--exclude=exclude.list</code>, 就可以在目录下创建 exclude.list, 内容为过滤的文件模式, 例如:</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">log/<br>Dockerfile<br><span class="hljs-string">.eslintrc.js</span><br><span class="hljs-string">.gitignore</span><br><span class="hljs-string">.prettierrc</span><br>*<span class="hljs-string">.log</span><br></code></pre></td></tr></table></figure>
+<h1 id="redis"><a class="markdownIt-Anchor" href="#redis"></a> redis</h1>
+<p>常用命令:</p>
+<ol>
+<li><code>flushdb</code>: 删除 db 中所有数据</li>
+<li><code>ttl key</code>: 剩余过期时间</li>
+<li><code>get key</code>: 查询 key 值</li>
+<li>redis 的值如果是 number, 会显示类似&quot;1234&quot;; 如果是 string, 会显示&quot;\“1234\”&quot;</li>
+<li>redis connect refuse 解决方法:<br />
+redis.conf 中将 protect mode yes 改为 no<br />
+bind 127.0.0.1 注释#</li>
+</ol>
+<h1 id="docker"><a class="markdownIt-Anchor" href="#docker"></a> docker</h1>
+<p>常用命令:</p>
+<ol>
+<li><code>docker run -dit --rm imageId bash</code>: 创建容器并在容器启动 bash 交互, 退出后自动删除容器</li>
+<li><code>docker run -dit imageId</code>: 创建容器</li>
+<li><code>docker exec -it id bash</code>: 在运行的容器中启动 bash 与其交互</li>
+<li><code>docker history imageId</code>: 通过镜像 id 查看上层 layer 的 Dockerfile</li>
+<li><code>docker logs containerId</code>: 输出容器日志</li>
+<li><code>docker run -d -p 127.0.0.1:80:80 nginx:alpine</code> 运行时指定端口映射, 需要注意的是 Dockerfile 中的<strong>EXPOSE</strong>关键字只是描述端口号, 没有实际作用</li>
+<li><code>docker build -t v0.0.1 --ulimit nofile=100002:100002 packages/wework-bot</code>: 可以指定上下文, 如果在 Dockerfile 中配置<strong>COPY . .</strong> 会将 packages/wework-bot 内容全部复制到容器的<strong>WORKSPACE</strong>下</li>
+</ol>
+<h1 id="git"><a class="markdownIt-Anchor" href="#git"></a> git</h1>
+<ol>
+<li><code>git rev-parse HEAD</code>: 最近的一次 commit id</li>
+<li><code>git merge --no-edit</code>: 不触发交互修改信息, 用于代码中调用</li>
+<li><code>git revert commitId</code>: 回退指定 commit, 新增一条 commit 记录, 比如想回退 HEAD 最新提交, 则<code>git revert HEAD</code>, 操作是可逆的.</li>
+<li><code>git reset commitId</code>: 回退指定 commit, 清除 commit 之后所有记录, 比如想回退 HEAD 最新提交, 则<code>git reset --hard HEAD^</code>, 操作不可逆.</li>
+<li><code>git pull --rebase</code>: pull 默认会生成一条 merge 记录, --rebase 指定不生成 merge 记录</li>
+</ol>
+<h1 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h1>
+<h2 id="pm2"><a class="markdownIt-Anchor" href="#pm2"></a> pm2</h2>
+<p>由于服务部署在线上环境的 docker 中, <code>pm2 start</code>不支持容器中启动, 这就导致 Dockerfile 中逻辑执行完容器直接 Exit. 官方提供<code>pm2-runtime</code>用于 docker 场景, 运行服务命令<code>pm2-runtime start ecosystem.config.js</code>, 和 pm2 不同, pm2-runtime 不支持 restart.</p>
+<h2 id="多环境-git"><a class="markdownIt-Anchor" href="#多环境-git"></a> 多环境 git</h2>
+<p>由于日常都是在内网的 linux 开发机上办公(通过 vscode ssh-remote), ssh 的内容就涉及到了多环境, 包括本地与开发机连接, 内网 git 操作, github 操作, 参考这篇文章: <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21402411">多环境 git 配置</a></p>
+<h2 id="xml-请求体"><a class="markdownIt-Anchor" href="#xml-请求体"></a> xml 请求体</h2>
+<p>body-parser 只支持处理 Content-Type 为 <code>application/x-www-form-urlencoded</code>, <code>multiple/form-data</code>, <code>application/json</code>的请求体; 微信客服号这种请求体是 xml 格式的 body-parser 处理不了, req.body 输出也是{}.<br />
+需要结合<strong>body-parser-xml</strong>库对 body-parser 做封装:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> bodyParser <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;body-parser&quot;</span>;<br><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> bodyParserXml <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;body-parser-xml&quot;</span>;<br><br><span class="hljs-title function_">bodyParserXml</span>(bodyParser);<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">XmlMiddleware</span> = bodyParser.<span class="hljs-title function_">xml</span>(&#123;<br>  <span class="hljs-attr">xmlParseOptions</span>: &#123;<br>    <span class="hljs-attr">explicitArray</span>: <span class="hljs-literal">false</span>,<br>  &#125;,<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h2 id="formdata"><a class="markdownIt-Anchor" href="#formdata"></a> formData</h2>
+<p>在 node 中 formData 的使用和浏览器中一致, 当 formData append 的值是文件可读流时, 文件的基本属性就会丢失, MIME 变成<strong>oct-stream</strong>, filename 变成一串 MD5 码, 可以通过 options 中配置指定文件基础信息</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs typescript">formData.<span class="hljs-title function_">append</span>(<span class="hljs-string">&#x27;file&#x27;</span>, &lt;可读流&gt;, &#123; <span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;dist.zip&#x27;</span> &#125;);<br></code></pre></td></tr></table></figure>
+<h2 id="centos7"><a class="markdownIt-Anchor" href="#centos7"></a> centos7</h2>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://ximouzhao.com/index.php/2022/06/17/centos7%e5%ae%89%e8%a3%85%e6%9c%80%e6%96%b0%e7%89%88%e6%9c%acgit/">centos7 安装最新版本的 git(不用手动编译)</a></li>
+<li>yum 源的目录: /etc/yum.repos.d/</li>
+<li>Transaction check error: 安装包冲突 <code>rpm -e 冲突包名 --nodeps</code></li>
+</ol>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/73591752/eslint-error-is-defined-but-never-used-warning-in-nestjs-for-all-decorators">Eslint error <code>is defined but never used</code> warning in NestJs for all decorators</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/53862615/how-to-merge-into-branch-without-commit">how to merge into branch without commit</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/53962776/whats-the-difference-between-pm2-and-pm2-runtime">https://stackoverflow.com/questions/53962776/whats-the-difference-between-pm2-and-pm2-runtime</a></li>
+<li><a target="_blank" rel="noopener" href="https://pm2.keymetrics.io/docs/usage/docker-pm2-nodejs/">https://pm2.keymetrics.io/docs/usage/docker-pm2-nodejs/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21402411">多环境 git 配置</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nestjs/">#nestjs</a>
+      
+        <a href="/tags/nodejs/">#nodejs</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>nestjs开发及流水线相关问题记录</div>
+      <div>https://mariana-yui.github.io/2023/04/20/2023-04-20-server-via-nestjs-summary/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/05/08/2023-05-08-standard-version-source-code-analysis/" title="standard-version源码分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">standard-version源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/24/2022-11-24-daily-record-from-oct-to-dec/" title="前端工作日常问题和易忘点记录">
+                        <span class="hidden-mobile">前端工作日常问题和易忘点记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2023/04/20/2023-04-20-server-via-nestjs-summary/';
+          this.page.identifier = '/2023/04/20/2023-04-20-server-via-nestjs-summary/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

@@ -1,0 +1,872 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学习笔记  postcss postcss 是通过 JavaScript 转换样式的工具, 可以帮助我们进行 css 的转换和适配, 比如添加浏览器前缀, reset css, 但是要实现这些功能需要 postcss 对应的插件, 单独使用 postcss 一般什么都干不了 所以如果要使用 postcss, 需要两步:  查找对应插件, 比如 webpack 中的post-loader 安装对应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack学习笔记(3)">
+<meta property="og:url" content="https://mariana-yui.github.io/2022/09/03/2022-09-03-study-webpack-day3/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="学习笔记  postcss postcss 是通过 JavaScript 转换样式的工具, 可以帮助我们进行 css 的转换和适配, 比如添加浏览器前缀, reset css, 但是要实现这些功能需要 postcss 对应的插件, 单独使用 postcss 一般什么都干不了 所以如果要使用 postcss, 需要两步:  查找对应插件, 比如 webpack 中的post-loader 安装对应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-09-03-study-webpack-day3.png">
+<meta property="article:published_time" content="2022-09-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.010Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2022-09-03-study-webpack-day3.png">
+  
+  
+  
+  <title>webpack学习笔记(3) - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2022-09-03-study-webpack-day3.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="webpack学习笔记(3)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-03 00:00" pubdate>
+          Created: 2022年09月03日 凌晨 00:00
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">webpack学习笔记(3)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="学习笔记"><a class="markdownIt-Anchor" href="#学习笔记"></a> 学习笔记</h1>
+<h2 id="postcss"><a class="markdownIt-Anchor" href="#postcss"></a> postcss</h2>
+<p>postcss 是通过 JavaScript 转换样式的工具, 可以帮助我们进行 css 的转换和适配, 比如添加浏览器前缀, reset css, 但是要实现这些功能需要 postcss 对应的插件, 单独使用 postcss 一般什么都干不了<br />
+所以如果要使用 postcss, 需要两步:</p>
+<ol>
+<li>查找对应插件, 比如 webpack 中的<code>post-loader</code></li>
+<li>安装对应的 npm 包</li>
+</ol>
+<p>这里以通过命令行终端使用 postcss 对 css 自动加浏览器前缀举例 🌰</p>
+<ol>
+<li><code>yarn add postcss postcss-cli autoprefixer -D</code><br />
+<code>postcss</code>为工具, <code>postcss-cli</code>在终端可以使用, <code>autoprefixer</code>为自动加浏览器前缀的插件(必须安装)</li>
+<li><code>npx postcss --use autoprefixer -o output.css ./entry.css</code><br />
+可以看到输出的<code>output.css</code>已经加上了浏览器前缀, 这里<code>autoprefixer</code>需要兼容的浏览器也是读取<code>browserslistrc</code></li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs css">:-webkit-full-screen &#123;<br>&#125;<br><span class="hljs-selector-pseudo">:fullscreen</span> &#123;<br>&#125;<br><span class="hljs-selector-class">.content</span> &#123;<br>  -webkit-user-select: none;<br>  -moz-user-select: none;<br>  user-select: none;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>也可以在线查看<code>autoprefixer</code>处理的结果: <a target="_blank" rel="noopener" href="https://autoprefixer.github.io/">https://autoprefixer.github.io/</a></p>
+<h3 id="use-in-webpack"><a class="markdownIt-Anchor" href="#use-in-webpack"></a> use in webpack</h3>
+<p>在终端使用 postcss 需要安装<code>postcss-cli</code>, 同样的, 如果要在 webpack 中使用 postcss, 需要安装<code>postcss-loader</code>, <code>webpack.config.js</code>加上如下配置: 这时候就需要指定 options 了不能直接指定 loader</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// module.rules</span><br>&#123;<br>    <span class="hljs-string">&quot;test&quot;</span>: <span class="hljs-regexp">/\.s?css$/i</span>,<br>    <span class="hljs-string">&quot;use&quot;</span>: [<br>        <span class="hljs-string">&quot;style-loader&quot;</span>,<br>        <span class="hljs-string">&quot;css-loader&quot;</span>,<br>        &#123;<br>            <span class="hljs-string">&quot;loader&quot;</span>: <span class="hljs-string">&quot;postcss-loader&quot;</span>,<br>            <span class="hljs-string">&quot;options&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;postcssOptions&quot;</span>: &#123;<br>                    <span class="hljs-string">&quot;plugins&quot;</span>: [<br>                        <span class="hljs-string">&quot;autoprefixer&quot;</span><br>                    ]<br>                &#125;<br>            &#125;<br>        &#125;,<br>        <span class="hljs-string">&quot;sass-loader&quot;</span><br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到重新打包后页面加上了浏览器前缀:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662195688318_7948.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="postcss-preset-env"><a class="markdownIt-Anchor" href="#postcss-preset-env"></a> postcss-preset-env</h3>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/csstools/postcss-plugins/tree/main/plugin-packs/postcss-preset-env">PostCSS Preset Env</a> lets you convert modern CSS into something most browsers can understand</p>
+</blockquote>
+<p>对于一些 css 写法, 比如<code>#12345678</code>,有的浏览器能够解析为 rgba, 有些浏览器无法解析导致不生效, 只用于添加浏览器前缀的<code>autoprefixer</code>就无法处理这种情况, 所以需要<code>postcss-preset-env</code>插件将其解析为大多数浏览器能够看懂的<code>rgba()</code>格式. 值得注意的是<code>postcss-preset-env</code>插件内置了<code>autoprefixer</code>, 所以使用<code>postcss-loader</code>时只需要引入<code>postcss-preset-env</code>即可.</p>
+<h3 id="postcssconfigjs"><a class="markdownIt-Anchor" href="#postcssconfigjs"></a> postcss.config.js</h3>
+<p>对于 css, sass, less, stylus 而言, rules 中 resources 匹配如果编写重复的 postcss 逻辑看起来是头大的, 这里可以创建<code>postcss.config.js</code>统一配置 options. <code>webpack.config.js</code>中<code>postcss-loader</code>就可以使用 string 了.<br />
+这里 plugins 中配置<code>postcss-preset-env</code>或<code>require('postcss-preset-env')</code>都是可以的, 除了部分插件用法<code>require('plugin-name')(...args)</code>不能传入 string 的形式</p>
+<p>postcss.config.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">plugins</span>: [<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;postcss-preset-env&quot;</span>)],<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>webpack.config.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>    <span class="hljs-string">&quot;test&quot;</span>: <span class="hljs-regexp">/.s?css$/i</span>,<br>    <span class="hljs-string">&quot;use&quot;</span>: [<br>        <span class="hljs-string">&quot;style-loader&quot;</span>,<br>        <span class="hljs-string">&quot;css-loader&quot;</span>,<br>        <span class="hljs-string">&quot;postcss-loader&quot;</span>,<br>        <span class="hljs-string">&quot;sass-loader&quot;</span><br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到浏览器前缀和 css 特殊写法都能够被正常解析了:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662198290436_5913.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="importloaders"><a class="markdownIt-Anchor" href="#importloaders"></a> importLoaders</h3>
+<p>如果 css 文件中<code>@import url(another.css)</code>, import 的 css 文件默认是不会被<code>css-loader</code>前执行的, 之前的 loader 只处理当前文件中的 css 样式, 所以这种情况需要在<code>css-loader</code>解析完后再返回让之前 loader 进行处理, 配置如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>	<span class="hljs-attr">loader</span>: <span class="hljs-string">&#x27;css-loader&#x27;</span>,<br>	<span class="hljs-attr">options</span>: &#123;<br>		<span class="hljs-attr">importLoaders</span>: <span class="hljs-number">1</span>,<br>	&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="file-loader"><a class="markdownIt-Anchor" href="#file-loader"></a> file-loader</h3>
+<p>处理 import/require()方式引入的文件资源, 打包时放到输出的文件夹中<br />
+首先安装 loader:<br />
+<code>yarn add -D file-loader</code><br />
+以图片资源举例, 默认没有使用<code>file-loader</code>时使用 import/require()引入资源会报错(backgrgound-image 形式是可以正常引入资源的)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable constant_">ERROR</span> <span class="hljs-keyword">in</span> ./img/girl.<span class="hljs-property">png</span> <span class="hljs-number">1</span>:<span class="hljs-number">0</span><br><span class="hljs-title class_">Module</span> parse <span class="hljs-attr">failed</span>: <span class="hljs-title class_">Unexpected</span> character <span class="hljs-string">&#x27;�&#x27;</span> (<span class="hljs-number">1</span>:<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
+<p>安装完后添加配置即可正常打包, webpack4 和 webpack5 下配置略有区别, 官方已经不建议在 webpack5 下使用<code>file_loader</code>,<code>url-loader</code>, 参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45770253/article/details/123862085">解决 webpack5 打包 css 背景图片问题</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 带+的为webpack5下需要新增的配置</span><br>&#123;<br>    <span class="hljs-string">&quot;test&quot;</span>: <span class="hljs-regexp">/.(gif|jpe?g|png)$/i</span>,<br>    <span class="hljs-string">&quot;use&quot;</span>: [<br>        &#123;<br>            <span class="hljs-string">&quot;loader&quot;</span>: <span class="hljs-string">&quot;file-loader&quot;</span>,<br>+            <span class="hljs-string">&quot;options&quot;</span>: &#123;<br>+                <span class="hljs-string">&quot;esModule&quot;</span>: <span class="hljs-literal">false</span><br>+            &#125;<br>        &#125;<br>    ],<br>+    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;javascript/auto&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>默认输出文件名为 md4 的 hash 值, 可以指定输出文件名格式, 常用 placeholder:</p>
+<ul>
+<li><code>[ext]</code>: 原文件扩展名</li>
+<li><code>[name]</code>: 源文件名</li>
+<li><code>[hash]</code>: 文件内容, 使用 md4 散列函数处理, 生成 128 位 hash 值(32 个 16 进制)</li>
+<li><code>[contentHash]</code>: 在<code>file-loader</code>中和<code>[hash]</code>一致</li>
+<li><code>[hash:&lt;Length&gt;]</code>: 截取 hash 长度</li>
+<li><code>[path]</code>: 文件相对于 webpack 配置文件的路径</li>
+</ul>
+<p>也可以在输出文件名前直接带上文件夹路径:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">options</span>: &#123;<br>	<span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;img/[name].[hash:6].[ext]&#x27;</span>,<br>	<span class="hljs-attr">esModule</span>: <span class="hljs-literal">false</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到打包结果符合预期:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662218739257_7112.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="url-loader"><a class="markdownIt-Anchor" href="#url-loader"></a> url-loader</h3>
+<p>require()/import 引入的资源不再生成单独文件, 直接打包进 bundle 中,使用<code>url-loader</code>后就不需要配置<code>file-loader</code>了(loader 还是要安装哦)<br />
+首先安装<code>url-loader</code>:<br />
+<code>yarn add -D url-loader</code><br />
+配置和<code>file-loader</code>一直, 将 loader 改为<code>url-loader</code>, 先看下更改为<code>url-loader</code>后的打包输出内容:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662219838044_7269.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<p>可以看到图片资源都被打包进 bundle.js 里了, 但实际项目中这很明显是不合理的, 全部打包进 bundle 会增大 js 文件体积, 但全部使用<code>file-loader</code>生成单独文件又会徒增多个 http 请求, 所以就需要一个阈值来指定<code>&lt; 阈值</code>打包进 bundle, <code>&gt; 阈值</code>的单独生成文件, 配置如下, 这里以两张图片(girl.png|7.8M, grassland.png|2.5M)举例, 设置<code>limit</code>为 3M:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>    <span class="hljs-string">&quot;loader&quot;</span>: <span class="hljs-string">&quot;url-loader&quot;</span>,<br>    <span class="hljs-string">&quot;options&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;img/[name].[hash:6].[ext]&quot;</span>,<br>        <span class="hljs-string">&quot;limit&quot;</span>: <span class="hljs-number">3</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>,<br>        <span class="hljs-string">&quot;esModule&quot;</span>: <span class="hljs-literal">false</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>打包结果:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662220100265_9387.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h2 id="migrate-to-webpack5"><a class="markdownIt-Anchor" href="#migrate-to-webpack5"></a> migrate to webpack5</h2>
+<p>webpack5 内置了资源模块类型(asset module type), 已经不再推荐使用<code>file-loader</code>, <code>url-loader</code>, 可以通过添加新的模块类型来替换这些 loader, 不需要再安装这些 loader</p>
+<ul>
+<li><code>asset/resource</code>: 替换<code>file-loader</code></li>
+<li><code>asset/inline</code>: 替换<code>url-loader</code></li>
+<li><code>asset/source</code>: 替换<code>raw-loader</code>, 不常用</li>
+<li><code>asset</code>: 根据配置的 maxSize 判断使用 resource 还是 inline</li>
+</ul>
+<p>以下是上述 webpack4 配置的 webpack5 版本:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>    <span class="hljs-string">&quot;test&quot;</span>: <span class="hljs-string">&quot;/.(gif|jpe?g|png)$/i&quot;</span>,<br>    <span class="hljs-comment">// asset == asset/resource + asset/inline</span><br>    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;asset&quot;</span>,<br>    <span class="hljs-string">&quot;generator&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;filename&quot;</span>: <span class="hljs-string">&quot;img/[name].[hash:6][ext]&quot;</span><br>    &#125;,<br>    <span class="hljs-string">&quot;parser&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;dataUrlCondition&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;maxSize&quot;</span>: <span class="hljs-number">3</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>webpack5 也提供了指定全局资源打包路径的方式, 当然, 这种方式我<strong>不推荐</strong>.</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs diff">&#123;<br>    &quot;output&quot;: &#123;<br>        &quot;filename&quot;: &quot;bundle.js&quot;,<br>        &quot;path&quot;: path.resolve(__dirname, &#x27;./build&#x27;),<br><span class="hljs-addition">+       &quot;assetModuleFilename&quot;: &quot;img/[name].[hash:6][ext]&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里使用<strong>generator</strong>和<strong>parser</strong>代替了原来的<strong>options</strong>, 需要注意的是这里的 placeholder <code>[ext]</code>为<code>.extname</code>, 而 webpack5 之前<code>[ext]</code>为<code>extname</code>, 所以这里不需要加<code>.</code></p>
+<p>打包结果与 webpack4 输出一致:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1662220100265_9387.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="别的-resource"><a class="markdownIt-Anchor" href="#别的-resource"></a> 别的 resource</h3>
+<p>对于字体, 音频, 视频等资源处理也和图片资源大致一样, 这里以字体举例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>	<span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(ttf|eot|woff2?)$/i</span>,<br>	<span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;asset/resource&#x27;</span>,<br>	<span class="hljs-attr">generator</span>: &#123;<br>		<span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;font/[name].[hash:6][ext]&#x27;</span>,<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="示例代码"><a class="markdownIt-Anchor" href="#示例代码"></a> 示例代码</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day3">https://github.com/Mariana-Yui/fe-learn-code/tree/main/learn-webpack/day3</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/webpack/" class="category-chain-item">webpack</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/webpack/">#webpack</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>webpack学习笔记(3)</div>
+      <div>https://mariana-yui.github.io/2022/09/03/2022-09-03-study-webpack-day3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月3日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/09/2022-09-09-study-webpack-day4/" title="webpack学习笔记(4)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">webpack学习笔记(4)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/02/2022-09-02-study-webpack-day2/" title="webpack学习笔记(2)">
+                        <span class="hidden-mobile">webpack学习笔记(2)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2022/09/03/2022-09-03-study-webpack-day3/';
+          this.page.identifier = '/2022/09/03/2022-09-03-study-webpack-day3/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

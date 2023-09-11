@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 起因是想下载一个套图但是貌似要 VIP 会员才能下载的样子,于是抱着侥幸的心理点开 F12 看了一眼,发现居然 src 就是图片的真实 uri,并且整个套图文件名数字是累加的, 嘴角疯狂上扬的同时决定写个脚本白嫖一下.  实现过程 该过程主要还是对 fetch 这个 api 的探究, 使用了能够运行在 node 中的node-fetch, 以下三种方法对图片音频进行下载测试均正常  str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fetch获取线上图片引发的思考">
+<meta property="og:url" content="https://mariana-yui.github.io/2020/03/16/2020-03-16-fetch-and-ajax/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 起因是想下载一个套图但是貌似要 VIP 会员才能下载的样子,于是抱着侥幸的心理点开 F12 看了一眼,发现居然 src 就是图片的真实 uri,并且整个套图文件名数字是累加的, 嘴角疯狂上扬的同时决定写个脚本白嫖一下.  实现过程 该过程主要还是对 fetch 这个 api 的探究, 使用了能够运行在 node 中的node-fetch, 以下三种方法对图片音频进行下载测试均正常  str">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390808197_589.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+<meta property="article:published_time" content="2020-03-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.008Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="ajax">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390808197_589.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+  
+  
+  
+  <title>fetch获取线上图片引发的思考 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('//dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1621390808197_589.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="fetch获取线上图片引发的思考"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-16 00:00" pubdate>
+          Created: 2020年03月16日 凌晨 00:00
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">fetch获取线上图片引发的思考</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>起因是想下载一个套图但是貌似要 VIP 会员才能下载的样子,于是抱着侥幸的心理点开 F12 看了一眼,发现居然 src 就是图片的真实 uri,并且整个套图文件名数字是累加的, 嘴角疯狂上扬的同时决定写个脚本白嫖一下.</p>
+<h1 id="实现过程"><a class="markdownIt-Anchor" href="#实现过程"></a> 实现过程</h1>
+<p>该过程主要还是对 <code>fetch</code> 这个 api 的探究, 使用了能够运行在 node 中的<code>node-fetch</code>, 以下三种方法对图片音频进行下载测试均正常</p>
+<h2 id="stream"><a class="markdownIt-Anchor" href="#stream"></a> stream</h2>
+<p>使用<code>fetch</code>返回的是一个<code>Promise</code>对象且<code>resolve</code>状态下的<code>res.body</code>是一个<code>readablestream</code>可读流,可以直接利用管道接到创建的可写流中.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> dest = fs.<span class="hljs-title function_">createWriteStream</span>(path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./images&quot;</span>, <span class="hljs-string">`<span class="hljs-subst">$&#123;no&#125;</span>-0<span class="hljs-subst">$&#123;num&#125;</span>.jpg`</span>))<br>    res.<span class="hljs-property">body</span>.<span class="hljs-title function_">pipe</span>(dest)<br>    res.<span class="hljs-property">body</span>.<span class="hljs-title function_">on</span>(<span class="hljs-string">&quot;end&quot;</span>, resolve)<br>    res.<span class="hljs-property">body</span>.<span class="hljs-title function_">on</span>(<span class="hljs-string">&quot;error&quot;</span>, reject)<br>  &#125;)<br>&#125;)<br></code></pre></td></tr></table></figure>
+<h2 id="buffer"><a class="markdownIt-Anchor" href="#buffer"></a> buffer()</h2>
+<p>利用<code>node-fetch</code>相较浏览器<code>fetch</code>特有的 buffer()方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url)<br>  .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">buffer</span>())<br>  .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">image</span> =&gt;</span> &#123;<br>    fs.<span class="hljs-title function_">writeFile</span>(path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./images&quot;</span>, <span class="hljs-string">`<span class="hljs-subst">$&#123;no&#125;</span>-0<span class="hljs-subst">$&#123;num&#125;</span>.jpg`</span>), image, <span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err)<br>    &#125;)<br>  &#125;)<br></code></pre></td></tr></table></figure>
+<h2 id="arraybuffer"><a class="markdownIt-Anchor" href="#arraybuffer"></a> arrayBuffer()</h2>
+<p>我们知道 node 中传输二进制数据需要通过<code>buffer</code>进行存储, 而 fetch 只提供了<code>res.arrayBuffer()</code>的方法, 所以在使用<code>arrayBuffer()</code>后还需要使用<code>Buffer.from</code>将<code>arrayBuffer</code>转化为<code>buffer</code>,这也是第二种方法简化的操作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">fetch</span>(url)<br>  .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.<span class="hljs-title function_">arrayBuffer</span>())<br>  .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">image</span> =&gt;</span> &#123;<br>    fs.<span class="hljs-title function_">writeFile</span>(path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&quot;./images&quot;</span>, <span class="hljs-string">`test-<span class="hljs-subst">$&#123;no&#125;</span>-0<span class="hljs-subst">$&#123;num&#125;</span>.jpg`</span>), <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(image), <span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err)<br>    &#125;)<br>  &#125;)<br></code></pre></td></tr></table></figure>
+<p><strong>到这里已经对于获取远程文件的方法已经讲完了,下面是个人对其中不理解的部分的笔记</strong></p>
+<h1 id="fetch-对比-ajax"><a class="markdownIt-Anchor" href="#fetch-对比-ajax"></a> <code>fetch</code> 对比 <code>ajax</code></h1>
+<p>之前一直觉得 fetch 与 $.ajax,axios 一样,对上面案例实践后发现还是自己菜了.<br />
+根据 MDN 上的描述:</p>
+<blockquote>
+<p>Fetch API 提供了一个 JavaScript 接口，用于访问和操纵 HTTP 管道的一些具体部分，例如请求和响应。它还提供了一个全局 fetch() 方法，该方法提供了一种简单，合理的方式来跨网络异步获取资源。这种功能以前是使用 XMLHttpRequest 实现的。</p>
+</blockquote>
+<p>也就是说 fetch 实际上是在<code>Promise</code>出现来解决<code>callback hell</code>前提下的一个新的异步获取资源的方案.<br />
+而 <code>fetch</code>与传统 ajax 的区别是</p>
+<ul>
+<li>除非出现网络故障或请求被阻止的情况下, <code>fetch</code>会将<code>Promise</code>状态置为<code>reject</code>,其余像响应状态码<code>404</code>,<code>500</code>, <code>fetch</code>都会将状态标记为<code>resolve</code>,但会将<code>resolve</code>的响应对象的<code>ok</code>属性置为<code>false</code></li>
+<li><code>fetch</code>不会接收跨域的<code>cookie</code>,即跨域响应头中的<code>set-cookie</code>将被忽略</li>
+<li><code>fetch</code>默认不会跨域时发送<code>cookie</code>,(ajax 也是一样的), 默认<code>fetch</code>的<code>credentials</code>为<code>same-origin</code></li>
+</ul>
+<h2 id="fetch-跨域"><a class="markdownIt-Anchor" href="#fetch-跨域"></a> <code>fetch</code> 跨域</h2>
+<p>fetch 跨域需要后端配合<code>CORS</code>,后端需要对以下响应头字段进行设置,否则会报错</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// Koa框架设置响应头</span><br>ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&quot;Access-Control-Allow-Origin&quot;</span>, <span class="hljs-string">&quot;*&quot;</span>)<br>ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&quot;Access-Control-Allow-Headers&quot;</span>, <span class="hljs-string">&quot;Origin, X-Requested-With, Content-Type, Accept&quot;</span>)<br>ctx.<span class="hljs-title function_">set</span>(<span class="hljs-string">&quot;Access-Control-Allow-Methods&quot;</span>, <span class="hljs-string">&quot;POST, GET, PUT, DELETE, OPTIONS&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>之后,<code>fetch</code>设置<code>fetch(url, &#123;mode: 'cors'&#125;)</code>即可进行跨域<br />
+若设置为<code>&#123;mode: 'no-cors'&#125;</code>, <code>fetch</code>不会进行报错,但会把<code>Promise</code>的<code>resolve</code>会返回<code>ok: false, type: 'opaque'</code>表明你没有权限访问<br />
+<img src="https://pic1.zhimg.com/80/v2-5bbd2fc2f90d8c5b3755616e5dd449bb_720w.jpg" srcset="/imgs/loading.gif" lazyload alt="resolve内容" /></p>
+<ul>
+<li>Q: 提问! 后端没有提供<code>CORS</code>, <code>fetch</code>需要怎么跨域?</li>
+<li>A: 那就不要使用<code>fetch api</code>, 建议<code>JSONP</code>.</li>
+</ul>
+<h1 id="arraybuffer-buffer-typedarray"><a class="markdownIt-Anchor" href="#arraybuffer-buffer-typedarray"></a> arrayBuffer, Buffer, typedArray</h1>
+<p>对于<code>arrayBuffer</code>与<code>typedArray</code>都属于二进制数组,对于详细内容可以参考掘金的这篇文章:<br />
+<a target="_blank" rel="noopener" href="https://juejin.im/post/5cde6dae6fb9a07eda02e5f1">掘金文章</a><br />
+这里做简述:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> a1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayBuffer</span>(<span class="hljs-number">4</span>)<br><span class="hljs-comment">// 这里创建了四个格子, 一个格子一个字节</span><br><span class="hljs-keyword">let</span> u1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8Array</span>(a1)<br><span class="hljs-comment">// 这里就利用arraybuffer创建了一个typedArray, 由于数组的每个元素同样是8bit1个字节, 所以输出为[0,0,0,0]</span><br>u1.<span class="hljs-property">buffer</span> === a1<br><span class="hljs-comment">// true</span><br><span class="hljs-comment">// 而通过typedArray.buffer方法又能够的到ArrayBuffer</span><br></code></pre></td></tr></table></figure>
+<p>下面这张图也能看出两者的关系:<br />
+<img src="/img/2020-03-16-fetch-and-ajax/arraybuffer.png" srcset="/imgs/loading.gif" lazyload alt="arrayBuffer" /></p>
+<h2 id="buffer-与-typedarray"><a class="markdownIt-Anchor" href="#buffer-与-typedarray"></a> Buffer 与 TypedArray</h2>
+<p>编写脚本时便有一个困扰,<code>Buffer</code>与<code>arrayBuffer</code>有啥关系? 这里记录一下.</p>
+<ul>
+<li><code>Buffer</code>是对<code>Uint8Array</code>的实现<br />
+<code>Buffer</code>对<code>Uint8Array</code>的相关 API 进行了实现,但 node 对<code>Buffer</code>类进行了优化,使之更适合在 node 下运行</li>
+<li><code>Buffer</code>并不是完全兼容<code>TypedArray</code>实现<br />
+<code>Buffer</code>同样是一个<code>Uint8Array</code>类型数组实例。但它与 ES6 中的类型数组规范并不完全兼容，如：<code>ArrayBuffer#slice()</code>会创建一个分隔部分数据的拷贝，而 <code>Buffer#slice()</code>会创建一个从 Buffer 中拷贝数据的视图，相对来说 <code>Buffer#slice()</code>更高效。</li>
+<li><code>Buffer</code>可以与类型数组共享内存区<br />
+可以从<code>TypedArray</code>的<code>.buffer</code>属性或<code>new ArrayBuffer()</code>创建一个 Buffer 对象。该对象会与类型数组共享内存区：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> arr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint16Array</span>(<span class="hljs-number">2</span>)<br>arr[<span class="hljs-number">0</span>] = <span class="hljs-number">5000</span><br>arr[<span class="hljs-number">1</span>] = <span class="hljs-number">4000</span><br><br><span class="hljs-keyword">const</span> buf1 = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(arr) <span class="hljs-comment">// 复制 buffer, 开辟新内存区</span><br><span class="hljs-keyword">const</span> buf2 = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(arr.<span class="hljs-property">buffer</span>) <span class="hljs-comment">// 与 arr 共享内存空间</span><br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf1) <span class="hljs-comment">// &lt;Buffer 88 a0&gt;，由于Buffer&#x27;等同于&#x27;Uint8Array所以对于16bit的类型数组,会截取8bit</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf2) <span class="hljs-comment">// &lt;Buffer 88 13 a0 0f&gt;</span><br></code></pre></td></tr></table></figure>
+<p>回到开头那个困扰, 除了底层规范不完全兼容, 我们可以以<code>Uint8Array</code>来看待<code>Buffer</code>,并可以通过<code>Buffer.buffer</code>的方式获得<code>ArrayBuffer</code>.</p>
+<h1 id="延伸的实践"><a class="markdownIt-Anchor" href="#延伸的实践"></a> 延伸的实践</h1>
+<p>谈了那么多关于二进制数据的话题,现在对掘金文章中的一些小案例进行一下实践</p>
+<h2 id="获取远程图片并转换为-base64-格式"><a class="markdownIt-Anchor" href="#获取远程图片并转换为-base64-格式"></a> 获取远程图片并转换为 base64 格式</h2>
+<p>to be continue…</p>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch">MDN fetch</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/47029864">知乎 fetch 如何跨域</a></p>
+<p><a target="_blank" rel="noopener" href="https://stackoom.com/question/3TrAt/%E4%BB%8EURL%E6%8F%90%E5%8F%96Blob%E5%B9%B6%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6">fetch 从 URL 提取 Blob 并写入文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://itbilu.com/nodejs/core/NyIjmp0wZ.html">Node.js Buffer 与 JavaScript TypeArray 类型数组的异同</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/5c98ed7cf265da610e5ed862#heading-9">前端处理后端接口传递过来的图片文件</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ajax/" class="category-chain-item">ajax</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%89%8D%E7%AB%AF/">#前端</a>
+      
+        <a href="/tags/ajax/">#ajax</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>fetch获取线上图片引发的思考</div>
+      <div>https://mariana-yui.github.io/2020/03/16/2020-03-16-fetch-and-ajax/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月16日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/24/2020-03-24-buy-domain/" title="购买域名及本地调试博客">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">购买域名及本地调试博客</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/14/2020-03-13-async-vs-defer/" title="浅谈script中的defer与async属性">
+                        <span class="hidden-mobile">浅谈script中的defer与async属性</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2020/03/16/2020-03-16-fetch-and-ajax/';
+          this.page.identifier = '/2020/03/16/2020-03-16-fetch-and-ajax/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

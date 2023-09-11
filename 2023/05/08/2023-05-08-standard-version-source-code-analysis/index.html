@@ -1,0 +1,881 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 最近又要搞个系统平台, 后续大小迭代通过版本号标识, 很自然地想到CHANGELOG.md, 调研后发现  使用教程 完整的配置参考自动产出 changelog-第二节：自动产出 简单说下在自己项目中用到的配置:  .versionrc 配置 CHANGELOG 的展示 format 12345678910111213141516171819202122232425262728293031">
+<meta property="og:type" content="article">
+<meta property="og:title" content="standard-version源码分析">
+<meta property="og:url" content="https://mariana-yui.github.io/2023/05/08/2023-05-08-standard-version-source-code-analysis/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 最近又要搞个系统平台, 后续大小迭代通过版本号标识, 很自然地想到CHANGELOG.md, 调研后发现  使用教程 完整的配置参考自动产出 changelog-第二节：自动产出 简单说下在自己项目中用到的配置:  .versionrc 配置 CHANGELOG 的展示 format 12345678910111213141516171819202122232425262728293031">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2023-05-08-standard-version-source-code-analysis.jpeg">
+<meta property="article:published_time" content="2023-05-08T07:04:09.000Z">
+<meta property="article:modified_time" content="2023-09-11T02:24:58.713Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="源码分析">
+<meta property="article:tag" content="standard-version">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2023-05-08-standard-version-source-code-analysis.jpeg">
+  
+  
+  
+  <title>standard-version源码分析 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/imgs/banner/md/2023-05-08-standard-version-source-code-analysis.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="standard-version源码分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-08 15:04" pubdate>
+          Created: 2023年05月08日 下午 15:04
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-09-11 10:24" pubdate>
+          Updated: 2023年09月11日 上午 10:24
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          9.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">standard-version源码分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>最近又要搞个系统平台, 后续大小迭代通过版本号标识, 很自然地想到<strong><a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a></strong>, 调研后发现</p>
+<h1 id="使用教程"><a class="markdownIt-Anchor" href="#使用教程"></a> 使用教程</h1>
+<p>完整的配置参考<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039813329">自动产出 changelog-第二节：自动产出</a></p>
+<p>简单说下在自己项目中用到的配置:</p>
+<h2 id="versionrc"><a class="markdownIt-Anchor" href="#versionrc"></a> .versionrc</h2>
+<p>配置 CHANGELOG 的展示 format</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;header&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;# 更新历史 \n\n&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;types&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;feat&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;✨ Features | 新功能&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;fix&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;🐛 Bug Fixes | Bug 修复&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;perf&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;⚡ Performance Improvements | 性能优化&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;revert&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;⏪ Reverts | 回退&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;chore&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;📦 Chores | 其他更新&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;📝 Documentation | 文档&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;style&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;💄 Styles | 风格&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;refactor&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;♻ Code Refactoring | 代码重构&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;test&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;✅ Tests | 测试&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;build&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;👷‍ Build System | 构建&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ci&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;section&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;🔧 Continuous Integration | CI 配置&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;hidden&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span>```<br><br>## package.json<br>配置skip<span class="hljs-punctuation">,</span> bump<span class="hljs-punctuation">:</span> 升级版本号<span class="hljs-punctuation">,</span> commit<span class="hljs-punctuation">:</span> 提交代码<span class="hljs-punctuation">,</span> tag<span class="hljs-punctuation">:</span> 打tag<br>```json<br><span class="hljs-punctuation">&#123;</span><br>	<span class="hljs-attr">&quot;standard-version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>	    <span class="hljs-attr">&quot;skip&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>	      <span class="hljs-attr">&quot;bump&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span><br>	      <span class="hljs-attr">&quot;commit&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span><br>	      <span class="hljs-attr">&quot;tag&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><br>	    <span class="hljs-punctuation">&#125;</span><br>	<span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="命令"><a class="markdownIt-Anchor" href="#命令"></a> 命令</h2>
+<p>指定<code>--release-as</code>为 patch, 每次升级递增小版本号(1.2.3 依次为大中小版本号); <code>--tag-prefix</code>为 wework-bot@ 指定 tag 的前缀, 不加前缀默认为 v, 因为该项目会打包为 docker 镜像, tag 会作为镜像版本, 所以这里需要加上前缀, 一般情况不需要加.</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">standard-version <span class="hljs-params">--release-as</span> <span class="hljs-keyword">patch</span> <span class="hljs-params">--tag-prefix</span> wework-bot@<br></code></pre></td></tr></table></figure>
+<h2 id="输出内容"><a class="markdownIt-Anchor" href="#输出内容"></a> 输出内容</h2>
+<p>按照以上配置执行命令后根据终端输出可以发现发生了以下行为:</p>
+<ol>
+<li>升级 package.json 版本号(如果没有指定<code>--first-release</code>第一次执行)</li>
+<li>生成 <a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a>(如果没有), 在开头加上距离上个 tag 之后的所有提交记录(符合提交规范的提交信息)</li>
+<li>提交本地上面涉及到的所有改动文件到远端</li>
+<li>打 tag 并提交远端</li>
+</ol>
+<h1 id="源码分析"><a class="markdownIt-Anchor" href="#源码分析"></a> 源码分析</h1>
+<p>明确了上述的配置以及命令输出内容, 就可以到源码中查看具体实现了, 我的建议是有目的性的去看源码, 因为<strong>standard-version</strong>这个工具中很多的功能例如项目中实际上根本没用到, 也就没有立刻理解的必要, 看源码的时候直接跳过就好.</p>
+<p>首先在 package.json 中查看入口文件逻辑: <strong>bin/cli.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> standardVersion = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;../index&quot;</span>);<br><span class="hljs-keyword">const</span> cmdParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;../command&quot;</span>);<br><span class="hljs-title function_">standardVersion</span>(cmdParser.<span class="hljs-property">argv</span>);<br></code></pre></td></tr></table></figure>
+<p><strong>./command.js</strong></p>
+<p>yargs 指定的一系列参数, 会结合<a target="_blank" rel="noopener" href="https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#conventional-changelog-configuration-spec-v210">conventional-changelog-config-spec</a>预置的参数同意作为<strong>standard-version</strong>的可选参数.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> spec = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;conventional-changelog-config-spec&quot;</span>);<br><span class="hljs-keyword">const</span> yargs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;yargs&quot;</span>)<br>  .<span class="hljs-title function_">option</span>(<span class="hljs-string">&quot;release-as&quot;</span>, &#123;<br>    <span class="hljs-attr">alias</span>: <span class="hljs-string">&quot;r&quot;</span>,<br>    <span class="hljs-attr">describe</span>:<br>      <span class="hljs-string">&quot;Specify the release type manually (like npm version &lt;major|minor|patch&gt;)&quot;</span>,<br>    <span class="hljs-attr">requiresArg</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,<br>  &#125;)<br>  <span class="hljs-comment">//...</span><br>  .<span class="hljs-title function_">config</span>(<span class="hljs-title function_">getConfiguration</span>())<br>  .<span class="hljs-title function_">pkgConf</span>(<span class="hljs-string">&quot;standard-version&quot;</span>);<br><span class="hljs-comment">//...</span><br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(spec.<span class="hljs-property">properties</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">propertyKey</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> property = spec.<span class="hljs-property">properties</span>[propertyKey];<br>  yargs.<span class="hljs-title function_">option</span>(propertyKey, &#123;<br>    <span class="hljs-comment">//...</span><br>  &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p><code>--release-as</code>, <code>--tag-prefix</code>等参数就是这里注册的.<br />
+yargs.config(getConfiguration())注入了 <strong>./lib/configuration.js</strong> 的配置, 文件中指定了默认的配置文件名, 表明 yargs 初始化时会在项目根目录下查找这些文件, 注册给 yargs.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CONFIGURATION_FILES</span> = [<br>  <span class="hljs-string">&quot;.versionrc&quot;</span>,<br>  <span class="hljs-string">&quot;.versionrc.cjs&quot;</span>,<br>  <span class="hljs-string">&quot;.versionrc.json&quot;</span>,<br>  <span class="hljs-string">&quot;.versionrc.js&quot;</span>,<br>];<br></code></pre></td></tr></table></figure>
+<p><strong>.config()</strong></p>
+<blockquote>
+<p>Tells the parser that if the option specified by <code>key</code> is passed in, it should be interpreted as a path to a JSON config file. The file is loaded and parsed, and its properties are set as arguments. Because the file is loaded using Node’s require(), the filename MUST end in <code>.json</code> to be interpreted correctly.</p>
+</blockquote>
+<p>根据 yargs 官网对<strong>config(object)</strong> api 的描述, 参数是 json 对象, 且对象 key 都会作为 yargs 的 key; 上述 <strong>.versionrc</strong> 中配置的<strong>header</strong>, <strong>type</strong> 等都可以通过 <code>yargs.header</code>, <code>yargs.type</code> 获取.</p>
+<p>同时 yargs.pkgConf(‘standard-version’)作用和.config()类似会在<strong>package.json</strong>中查询键名为 standard-version 的配置, 上述<strong>package,json</strong>中配置的 skip 也可以通过<code>yargs.skip.bump</code>, <code>yargs.skip.commit</code>, <code>yargs.skip.tag</code>获取.</p>
+<p><strong>.pkg(key, [cwd])</strong></p>
+<blockquote>
+<p>Similar to <a target="_blank" rel="noopener" href="https://github.com/yargs/yargs/blob/main/docs/api.md#config"><code>config()</code></a>, indicates that yargs should interpret the object from the specified key in package.json as a configuration object.<br />
+<code>cwd</code> can optionally be provided, the package.json will be read from this location.</p>
+</blockquote>
+<p><strong>./index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">standardVersion</span>(<span class="hljs-params">argv</span>) &#123;<br>  <span class="hljs-comment">//...</span><br>  <span class="hljs-comment">// 1. step1</span><br>  <span class="hljs-keyword">const</span> args = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;&#125;, defaults, argv);<br>  <span class="hljs-keyword">let</span> pkg;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> packageFile <span class="hljs-keyword">of</span> args.<span class="hljs-property">packageFiles</span>) &#123;<br>    <span class="hljs-keyword">const</span> updater = <span class="hljs-title function_">resolveUpdaterObjectFromArgument</span>(packageFile);<br>    <span class="hljs-keyword">if</span> (!updater) <span class="hljs-keyword">return</span>;<br>    <span class="hljs-keyword">const</span> pkgPath = path.<span class="hljs-title function_">resolve</span>(process.<span class="hljs-title function_">cwd</span>(), updater.<span class="hljs-property">filename</span>);<br>    <span class="hljs-keyword">const</span> contents = fs.<span class="hljs-title function_">readFileSync</span>(pkgPath, <span class="hljs-string">&quot;utf8&quot;</span>);<br>    pkg = &#123;<br>      <span class="hljs-attr">version</span>: updater.<span class="hljs-property">updater</span>.<span class="hljs-title function_">readVersion</span>(contents),<br>      <span class="hljs-attr">private</span>:<br>        <span class="hljs-keyword">typeof</span> updater.<span class="hljs-property">updater</span>.<span class="hljs-property">isPrivate</span> === <span class="hljs-string">&quot;function&quot;</span><br>          ? updater.<span class="hljs-property">updater</span>.<span class="hljs-title function_">isPrivate</span>(contents)<br>          : <span class="hljs-literal">false</span>,<br>    &#125;;<br>    <span class="hljs-keyword">break</span>;<br>  &#125;<br>  <span class="hljs-comment">// 2. step2</span><br>  <span class="hljs-keyword">let</span> version;<br>  <span class="hljs-keyword">if</span> (pkg) &#123;<br>    version = pkg.<span class="hljs-property">version</span>;<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args.<span class="hljs-property">gitTagFallback</span>) &#123;<br>    version = <span class="hljs-keyword">await</span> <span class="hljs-title function_">latestSemverTag</span>(args.<span class="hljs-property">tagPrefix</span>);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&quot;no package file found&quot;</span>);<br>  &#125;<br>  <span class="hljs-comment">// 核心逻辑</span><br>  <span class="hljs-keyword">const</span> newVersion = <span class="hljs-keyword">await</span> <span class="hljs-title function_">bump</span>(args, version);<br>  <span class="hljs-keyword">await</span> <span class="hljs-title function_">changelog</span>(args, newVersion);<br>  <span class="hljs-keyword">await</span> <span class="hljs-title function_">commit</span>(args, newVersion);<br>  <span class="hljs-keyword">await</span> <span class="hljs-title function_">tag</span>(newVersion, pkg ? pkg.<span class="hljs-property">private</span> : <span class="hljs-literal">false</span>, args);<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>运行命令时附带的参数以及 <strong>.config()</strong>. <strong>.pkgConf()</strong> 配置的参数都会作为函数的参数.<br />
+<strong>./index.js</strong> 函数除去一些校验逻辑, 主要做了两件事:</p>
+<ol>
+<li>
+<p>结合 argv 和默认配置(位于 <strong>./default.js</strong>), 然后检索默认配置的<strong>packageFiles</strong>, 这里主要就是获取<strong>package.json</strong>中的 version 作为当前版本号. 可以看到遍历中存在 break, 找到文件就不会继续查询了.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">defaults.<span class="hljs-property">packageFiles</span> = [<span class="hljs-string">&quot;package.json&quot;</span>, <span class="hljs-string">&quot;bower.json&quot;</span>, <span class="hljs-string">&quot;manifest.json&quot;</span>];<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>核心逻辑</p>
+</li>
+</ol>
+<h2 id="核心逻辑"><a class="markdownIt-Anchor" href="#核心逻辑"></a> 核心逻辑</h2>
+<h3 id="21-更新版本号"><a class="markdownIt-Anchor" href="#21-更新版本号"></a> 2.1 更新版本号</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> newVersion = <span class="hljs-keyword">await</span> <span class="hljs-title function_">bump</span>(args, version);<br></code></pre></td></tr></table></figure>
+<p><strong>./lifecycles/bump.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (!args.<span class="hljs-property">firstRelease</span>) &#123;<br>  <span class="hljs-keyword">const</span> releaseType = <span class="hljs-title function_">getReleaseType</span>(<br>    args.<span class="hljs-property">prerelease</span>,<br>    release.<span class="hljs-property">releaseType</span>,<br>    version<br>  );<br>  newVersion =<br>    semver.<span class="hljs-title function_">valid</span>(releaseType) ||<br>    semver.<span class="hljs-title function_">inc</span>(version, releaseType, args.<span class="hljs-property">prerelease</span>);<br>  <span class="hljs-title function_">updateConfigs</span>(args, newVersion);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>最关键的就上面这段逻辑, 如果是第一次发布(<code>--first-release</code>), 就不更新版本号, 否则根据<code>--release-as</code>更新, 这里用到了<strong>semver</strong>第三方库, 可以判断<code>--release-as</code>是否合法(<strong>.valid()</strong>), 根据<code>--release-as</code>自动判断生成新的版本号(<strong>.inc()</strong>), 完整使用参考<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/semver">npm semver</a>. 最后返回新的版本号.</p>
+<h3 id="22-生成-changelog"><a class="markdownIt-Anchor" href="#22-生成-changelog"></a> 2.2 生成 CHANGELOG</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">await</span> <span class="hljs-title function_">changelog</span>(args, newVersion);<br></code></pre></td></tr></table></figure>
+<p><strong>./lifecycles/changelog.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">START_OF_LAST_RELEASE_PATTERN</span> = <span class="hljs-regexp">/(^#+ \[?[0-9]+\.[0-9]+\.[0-9]+|&lt;a name=)/m</span><br><br><span class="hljs-title function_">createIfMissing</span>(args)<br>    <span class="hljs-keyword">const</span> header = args.<span class="hljs-property">header</span><br><br>    <span class="hljs-keyword">let</span> oldContent = args.<span class="hljs-property">dryRun</span> ? <span class="hljs-string">&#x27;&#x27;</span> : fs.<span class="hljs-title function_">readFileSync</span>(args.<span class="hljs-property">infile</span>, <span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    <span class="hljs-keyword">const</span> oldContentStart = oldContent.<span class="hljs-title function_">search</span>(<span class="hljs-variable constant_">START_OF_LAST_RELEASE_PATTERN</span>)<br>    <span class="hljs-keyword">if</span> (oldContentStart !== -<span class="hljs-number">1</span>) &#123;<br>      oldContent = oldContent.<span class="hljs-title function_">substring</span>(oldContentStart)<br>    &#125;<br>    <span class="hljs-keyword">let</span> content = <span class="hljs-string">&#x27;&#x27;</span><br>    <span class="hljs-keyword">const</span> context = &#123; <span class="hljs-attr">version</span>: newVersion &#125;<br>    <span class="hljs-keyword">const</span> changelogStream = <span class="hljs-title function_">conventionalChangelog</span>(&#123;<br>      <span class="hljs-attr">debug</span>: args.<span class="hljs-property">verbose</span> &amp;&amp; <span class="hljs-variable language_">console</span>.<span class="hljs-property">info</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">console</span>, <span class="hljs-string">&#x27;conventional-changelog&#x27;</span>),<br>      <span class="hljs-attr">preset</span>: <span class="hljs-title function_">presetLoader</span>(args),<br>      <span class="hljs-attr">tagPrefix</span>: args.<span class="hljs-property">tagPrefix</span><br>    &#125;, context, &#123; <span class="hljs-attr">merges</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">path</span>: args.<span class="hljs-property">path</span> &#125;)<br>      .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title function_">reject</span>(err)<br>      &#125;)<br><br>    changelogStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">buffer</span>) &#123;<br>      content += buffer.<span class="hljs-title function_">toString</span>()<br>    &#125;)<br><br>    changelogStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-title function_">checkpoint</span>(args, <span class="hljs-string">&#x27;outputting changes to %s&#x27;</span>, [args.<span class="hljs-property">infile</span>])<br>      <span class="hljs-title function_">writeFile</span>(args, args.<span class="hljs-property">infile</span>, header + <span class="hljs-string">&#x27;\n&#x27;</span> + (content + oldContent).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\n+$/</span>, <span class="hljs-string">&#x27;\n&#x27;</span>))<br>      <span class="hljs-keyword">return</span> <span class="hljs-title function_">resolve</span>()<br>    &#125;)<br>  &#125;)<br></code></pre></td></tr></table></figure>
+<p>上述关键逻辑, 如果<strong><a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a></strong>不存在则创建, 读取<strong><a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a></strong>, 根据<strong>START_OF_LAST_RELEASE_PATTERN</strong>正则匹配 log 内容的开头的<code>### [x.x.x]</code>, 从而获取旧的历史提交内容; 然后使用<strong>conventional-changelog</strong>第三方库获取上一次 tag 之后的所有提交, 并按照 <strong>.versionrc</strong> 中配置的 type 分类返回新的 CHANGELOG 内容, 这个库提供的函数返回 stream, 需要监听数据流事件, 参考<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/conventional-changelog">npm conventional-changelog</a>. 在<code>end</code>事件回调中将 yargs.header, 新内容, 正则匹配到的就内容拼接重新写入<strong><a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a></strong><br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1683808772259_563.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /><br />
+图: <a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a> 的内容格式</p>
+<h3 id="23-提交代码"><a class="markdownIt-Anchor" href="#23-提交代码"></a> 2.3 提交代码</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">await</span> <span class="hljs-title function_">commit</span>(args, newVersion);<br></code></pre></td></tr></table></figure>
+<p><strong>./commit</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (!args.<span class="hljs-property">skip</span>.<span class="hljs-property">changelog</span>) &#123;<br>  toAdd.<span class="hljs-title function_">push</span>(args.<span class="hljs-property">infile</span>);<br>&#125;<br><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(bump.<span class="hljs-title function_">getUpdatedConfigs</span>()).<span class="hljs-title function_">forEach</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">p</span>) &#123;<br>  toAdd.<span class="hljs-title function_">push</span>(path.<span class="hljs-title function_">relative</span>(process.<span class="hljs-title function_">cwd</span>(), p));<br>&#125;);<br><span class="hljs-keyword">await</span> <span class="hljs-title function_">runExecFile</span>(args, <span class="hljs-string">&quot;git&quot;</span>, [<span class="hljs-string">&quot;add&quot;</span>].<span class="hljs-title function_">concat</span>(toAdd));<br><span class="hljs-keyword">await</span> <span class="hljs-title function_">runExecFile</span>(<br>  args,<br>  <span class="hljs-string">&quot;git&quot;</span>,<br>  [<span class="hljs-string">&quot;commit&quot;</span>].<span class="hljs-title function_">concat</span>(verify, sign, args.<span class="hljs-property">commitAll</span> ? [] : toAdd, [<br>    <span class="hljs-string">&quot;-m&quot;</span>,<br>    <span class="hljs-string">`<span class="hljs-subst">$&#123;formatCommitMessage(args.releaseCommitMessageFormat, newVersion)&#125;</span>`</span>,<br>  ])<br>);<br></code></pre></td></tr></table></figure>
+<p>上述关键逻辑, 先获取上面两步修改的<strong>package.json</strong>(<code>bump.getUploadedConfigs()</code>), <strong><a target="_blank" rel="noopener" href="http://CHANGELOG.md">CHANGELOG.md</a>*</strong>(<code>args.infile</code>), 然后就是执行<strong>git add</strong>和<strong>git commit -m --no-verify</strong>基本操作.<br />
+当时比较困惑的是 formatCommitMessage 哪来的, 你会发现查找源码并没有找到这个函数创建的地方, 这就要回到之前说的 <strong>./command.js</strong>最后将<strong>conventional-changelog-config-spec</strong>预置的属性合并到 args,<br />
+官方 api 中就能找到这个属性</p>
+<h4 id="releasecommitmessageformat-string"><a class="markdownIt-Anchor" href="#releasecommitmessageformat-string"></a> releaseCommitMessageFormat (<code>string</code>)</h4>
+<blockquote>
+<p>A string to be used to format the auto-generated release commit message.</p>
+</blockquote>
+<p>默认值就是:</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="language-xml">chore(release): </span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">currentTag</span>&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+<p><strong>./lib/format-commit-message.js</strong>中会将<code>&#123;&#123;currentTag&#125;&#125;</code>替换为新的版本号</p>
+<p>在 git log 中也能够看到这条 commit message:<br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1683877044866_1759.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h3 id="标记-tag"><a class="markdownIt-Anchor" href="#标记-tag"></a> 标记 tag</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">await</span> <span class="hljs-title function_">tag</span>(newVersion, pkg ? pkg.<span class="hljs-property">private</span> : <span class="hljs-literal">false</span>, args);<br></code></pre></td></tr></table></figure>
+<p><strong>./lib/lifecycles/tag.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">await</span> <span class="hljs-title function_">runExecFile</span>(args, <span class="hljs-string">&quot;git&quot;</span>, [<br>  <span class="hljs-string">&quot;tag&quot;</span>,<br>  tagOption,<br>  args.<span class="hljs-property">tagPrefix</span> + newVersion,<br>  <span class="hljs-string">&quot;-m&quot;</span>,<br>  <span class="hljs-string">`<span class="hljs-subst">$&#123;formatCommitMessage(args.releaseCommitMessageFormat, newVersion)&#125;</span>`</span>,<br>]);<br><span class="hljs-keyword">const</span> currentBranch = <span class="hljs-keyword">await</span> <span class="hljs-title function_">runExecFile</span>(<span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;git&quot;</span>, [<br>  <span class="hljs-string">&quot;rev-parse&quot;</span>,<br>  <span class="hljs-string">&quot;--abbrev-ref&quot;</span>,<br>  <span class="hljs-string">&quot;HEAD&quot;</span>,<br>]);<br><span class="hljs-keyword">let</span> message = <span class="hljs-string">&quot;git push --follow-tags origin &quot;</span> + currentBranch.<span class="hljs-title function_">trim</span>();<br></code></pre></td></tr></table></figure>
+<p>上述关键逻辑, 可以看到<code>--tag-prefix</code>配置此时就会作为<strong>git tag</strong>的前缀, 然后<strong>git push --follow-tags origin branch</strong>提交远端.<br />
+这里也收获一个小 tips: <strong>git rev-parse --abbrev-ref HEAD</strong> 获取当前分支名</p>
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h1>
+<p><strong>standard-version</strong> 源码总体不复杂, 但是还是能学习到<strong>yargs</strong>, <strong>semver</strong>, <strong>conventional-changelog</strong>库的使用以及工程化的操作, 🐮 的不行.</p>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000039813329">自动产出 changelog-第二节：自动产出</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#releasecommitmessageformat-string">Conventional Changelog Configuration Spec (v2.1.0)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/yargs/yargs/blob/main/docs/api.md">yargs api</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96/" class="category-chain-item">工程化</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">#源码分析</a>
+      
+        <a href="/tags/standard-version/">#standard-version</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>standard-version源码分析</div>
+      <div>https://mariana-yui.github.io/2023/05/08/2023-05-08-standard-version-source-code-analysis/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年5月8日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/10/2023-09-10-javascript-design-mode-and-practice-record/" title="《JavaScript设计模式与开发实践》读书笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">《JavaScript设计模式与开发实践》读书笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/20/2023-04-20-server-via-nestjs-summary/" title="nestjs开发及流水线相关问题记录">
+                        <span class="hidden-mobile">nestjs开发及流水线相关问题记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2023/05/08/2023-05-08-standard-version-source-code-analysis/';
+          this.page.identifier = '/2023/05/08/2023-05-08-standard-version-source-code-analysis/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>

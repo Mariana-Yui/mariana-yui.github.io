@@ -1,0 +1,822 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon.ico">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Mariana">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 看了一段时间 canvas, 重拾当初学前端的那种热情, 👱 就是喜欢整点花里胡哨的。正好在掘金上看到不少 canvas 好文章，结合理论进行实战， 记录一下过程中的知识点。  1 需求分析 设计可配置项, 这里分为产品同学看得懂的配置项和技术上的配置项 所有配置项包括: 12345678910interface ScratchCardConfig &amp;#123;  canvas: HTM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="canvas实现刮刮卡">
+<meta property="og:url" content="https://mariana-yui.github.io/2021/06/30/2021-06-30-canvas-scratch-card/index.html">
+<meta property="og:site_name" content="Mariana&#39;s Blog">
+<meta property="og:description" content="背景 看了一段时间 canvas, 重拾当初学前端的那种热情, 👱 就是喜欢整点花里胡哨的。正好在掘金上看到不少 canvas 好文章，结合理论进行实战， 记录一下过程中的知识点。  1 需求分析 设计可配置项, 这里分为产品同学看得懂的配置项和技术上的配置项 所有配置项包括: 12345678910interface ScratchCardConfig &amp;#123;  canvas: HTM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1624894343976_5977.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+<meta property="article:published_time" content="2021-06-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-18T11:14:02.009Z">
+<meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="canvas">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1624894343976_5977.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0">
+  
+  
+  
+  <title>canvas实现刮刮卡 - Mariana&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/dank-mono.css">
+<link rel="stylesheet" href="/css/APlayer.min.css">
+<link rel="stylesheet" href="/css/mac.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mariana-yui.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[],"backSpeed":70},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"fold_btn":true,"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/imgs/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"41fc030db57d5570dd22f78997dc4a7e","google":"UA-148995736-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"PDAXepQnN6qOzhO7B5vXKLnC-gzGzoHsz","app_key":"kCWBURFFZoT5nd7Pj7gcnqX0","server_url":"https://pdaxepqn.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-148995736-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mariana&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-list"></i>
+                自定义
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                    <span class="dropdown-item" onclick="new Function(`return () =&gt; { var pre = $(&#39;.markdown-body pre&#39;); var code = $(&#39;.markdown-body code&#39;);   $(&#39;.markdown-body code&#39;).css(&#39;font-family&#39;, code.css(&#39;font-family&#39;).replace(/&#39;?dm&#39;?,?/, &#39;&#39;)); $(&#39;.markdown-body pre&#39;).addClass(&#39;default&#39;) }`)(event)()">
+                      <i class="iconfont icon-pencil"></i>
+                      代码块默认字体
+                    </span>
+                  
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('//dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1624894343976_5977.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=octetStream&api-version=5.0') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="canvas实现刮刮卡"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-30 00:00" pubdate>
+          Created: 2021年06月30日 凌晨 00:00
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2023-07-18 19:14" pubdate>
+          Updated: 2023年07月18日 晚上 19:14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          6.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          52 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">canvas实现刮刮卡</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h1>
+<p>看了一段时间 canvas, 重拾当初学前端的那种热情, 👱 就是喜欢整点花里胡哨的。正好在掘金上看到不少 canvas 好文章，结合理论进行实战， 记录一下过程中的知识点。</p>
+<h1 id="1-需求分析"><a class="markdownIt-Anchor" href="#1-需求分析"></a> 1 需求分析</h1>
+<p>设计可配置项, 这里分为产品同学看得懂的配置项和技术上的配置项<br />
+所有配置项包括:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">ScratchCardConfig</span> &#123;<br>  <span class="hljs-attr">canvas</span>: <span class="hljs-title class_">HTMLCanvasElement</span>; <span class="hljs-comment">// canvas元素</span><br>  showAllPercent?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// 直接全部刮开百分比</span><br>  coverImg?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// 图片图层</span><br>  coverColor?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// 纯色图层</span><br>  doneCallback?: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">void</span>; <span class="hljs-comment">// 全部刮开回调函数</span><br>  radius?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">//擦除半径</span><br>  <span class="hljs-attr">pixelRatio</span>: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// 屏幕倍率, 适应retina屏</span><br>  fadeOut?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// 全部刮开淡出效果时间(ms)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="2-项目结构"><a class="markdownIt-Anchor" href="#2-项目结构"></a> 2 项目结构</h1>
+<p>因为 canvas 有很多方法和属性,js 无法正确进行代码提示, 所以使用 ts 进行开发</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">|- index.html<br>|- award.jpg  <span class="hljs-regexp">//</span> 底部结果图片<br>|- index.js<br>|- index.ts <span class="hljs-regexp">//</span> 实际编写的逻辑<br>|- scratch-<span class="hljs-number">2</span>x.png <span class="hljs-regexp">//</span> 上层遮罩的图片<br></code></pre></td></tr></table></figure>
+<h1 id="3-具体实现"><a class="markdownIt-Anchor" href="#3-具体实现"></a> 3 具体实现</h1>
+<h2 id="页面结构"><a class="markdownIt-Anchor" href="#页面结构"></a> 页面结构</h2>
+<p>前置知识: canva 设置 width/height 改变的是绘图区域的宽高, 设置 style.width/height 改变的是元素的宽高, 绘图区域没有发生改变, 绘图区域会根据元素宽高等比例缩放.<br />
+而对于 retina 屏幕(这里指定 2 倍物理像素, 实际项目可以使用 window.devicePixelRatio 判断), 一个逻辑像素 = 2 物理像素, 相当于图片放大了一倍, 所以这里指定 canvas 属性 width/height 为 750/280, style.width/height 为 350/140. 相当于图片缩小一倍. 这样图片就变清晰了.<br />
+<strong>不要问为什么不直接把 canvas style width/height 直接设为 750/280, 这样图片就无法绘制完全</strong><br />
+award.jpg 也是一样, 缩小一倍进行显示</p>
+<p>HTML 代码:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;canvas&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;750&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;280&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">canvas</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>CSS 代码:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.card</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">375px</span>;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">140px</span>;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;./award.jpg&#x27;</span>);<br>  <span class="hljs-attribute">background-size</span>: <span class="hljs-number">375px</span> <span class="hljs-number">140px</span>;<br>&#125;<br><span class="hljs-selector-class">.card</span> <span class="hljs-selector-tag">canvas</span> &#123;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">375px</span>;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">140px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="初始化"><a class="markdownIt-Anchor" href="#初始化"></a> 初始化</h2>
+<h3 id="构造函数"><a class="markdownIt-Anchor" href="#构造函数"></a> 构造函数</h3>
+<p>设置选填的配置默认值, 直接全部刮开的百分比, 刮开时绘制的圆半径, 纯色遮罩图层的颜色, 全部刮开的淡出时间</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScratchCard</span> &#123;<br>  <span class="hljs-attr">config</span>: <span class="hljs-title class_">ScratchCardConfig</span>;<br>  <span class="hljs-attr">ctx</span>: <span class="hljs-title class_">CanvasRenderingContext2D</span>;<br>  <span class="hljs-attr">canvas</span>: <span class="hljs-title class_">HTMLCanvasElement</span>;<br>  <span class="hljs-attr">offsetX</span>: <span class="hljs-built_in">number</span>;<br>  <span class="hljs-attr">offsetY</span>: <span class="hljs-built_in">number</span>;<br>  <span class="hljs-attr">done</span>: <span class="hljs-built_in">boolean</span>;<br>  <span class="hljs-attr">isDown</span>: <span class="hljs-built_in">boolean</span>;<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">config: ScratchCardConfig</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span> = &#123;<br>      <span class="hljs-attr">showAllPercent</span>: <span class="hljs-number">45</span>,<br>      <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,<br>      <span class="hljs-attr">coverColor</span>: <span class="hljs-string">&#x27;#999&#x27;</span>,<br>      <span class="hljs-attr">fadeOut</span>: <span class="hljs-number">2000</span>,<br>      ...config<br>    &#125;;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="遮罩图层"><a class="markdownIt-Anchor" href="#遮罩图层"></a> 遮罩图层</h3>
+<p>这里逻辑很简单, 没有图片图层时设置纯色图层, 需要介绍的是<code>globalCompositeOperation</code>属性, 用于设置两个绘图路径交叉时的渲染方式, <code>destination-out</code>指在源图像外显示目标图像, 源图像透明, 这里 coverImg 是目标图像, 刮开时绘制的圆是源图像, 这样源图像区域就会展示最底部的结果图片</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScratchCard</span> &#123;<br>  ...<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">config: ScratchCardConfig</span>) &#123;<br>    ...<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_init</span>();<br>  &#125;<br>  <span class="hljs-keyword">private</span> <span class="hljs-title function_">_init</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">canvas</span>;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetX</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">offsetLeft</span>;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetY</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">offsetTop</span>;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_addEvent</span>();<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">coverImg</span>) &#123;<br>      <span class="hljs-comment">// 设置的是图片图层</span><br>      <span class="hljs-keyword">const</span> coverImg = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Image</span>();<br>      coverImg.<span class="hljs-property">src</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">coverImg</span>;<br>      coverImg.<span class="hljs-property">onload</span> = <span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">drawImage</span>(coverImg, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;destination-out&#x27;</span>;<br>      &#125;;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 纯色图层</span><br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">coverColor</span>;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">width</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>);<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;destination-out&#x27;</span>;<br>    &#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="绑定事件"><a class="markdownIt-Anchor" href="#绑定事件"></a> 绑定事件</h2>
+<p>刮奖效果其实就是通过绑定<code>touchstart</code>, <code>touchmove</code>, <code>touchend</code>事件来绘制源图像, 这里把 mouse 事件也加上<br />
+这里通过监听<code>touchmove</code>来绘制图像, <code>touchstart</code>和<code>touchend</code>来控制开始停止<br />
+虽然默认 addEventListener 第三个参数的属性 passive 用于控制是否禁用 preventDefault, 默认是 false, 但是还是要显式指定{passive: false}, 因为<code>touchstart</code>和<code>touchend</code>passive 默认值还是 true<br />
+isDown 表示是否触摸屏幕</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScratchCard</span> &#123;<br>  ...<br>  <span class="hljs-keyword">private</span> <span class="hljs-title function_">_addEvent</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;touchstart&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_eventDown</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;touchend&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_eventUp</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_scratch</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mousedown&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_eventDown</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mouseup&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_eventUp</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mousemove&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">_scratch</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), &#123; <span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span> &#125;);<br>  &#125;<br>  <span class="hljs-keyword">private</span> <span class="hljs-title function_">_eventDown</span>(<span class="hljs-params">e: MouseEvent | TouchEvent</span>) &#123;<br>    e.<span class="hljs-title function_">preventDefault</span>();<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isDown</span> = <span class="hljs-literal">true</span>;<br>  &#125;<br>  <span class="hljs-keyword">private</span> <span class="hljs-title function_">_eventUp</span>(<span class="hljs-params">e: MouseEvent | TouchEvent</span>) &#123;<br>    e.<span class="hljs-title function_">preventDefault</span>();<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isDown</span> = <span class="hljs-literal">false</span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="擦除效果"><a class="markdownIt-Anchor" href="#擦除效果"></a> 擦除效果</h2>
+<p>逻辑大致如下:</p>
+<ol>
+<li>判断刮刮卡还没挂完 this.done 为 false, 且处于按下状态 this.isDown 为 true</li>
+<li>如果存在多个触点, 则使用最后一个触点, 使用 e.changedTouches 获取最后一个触点</li>
+<li>获取当前点击的坐标 x, y, 这里 ev.clientX + document.body.scrollLeft 相当于 ev.pageX</li>
+<li>绘图</li>
+</ol>
+<p>需要注意的是这里不能用解构赋值<code>const &#123; beginPath, arc, fill &#125; = this.ctx;</code>,会使绘图方法的上下文失效, 可以用 <code>with(this.ctx)</code>, 但不推荐</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-title function_">_scratch</span>(<span class="hljs-params">e: MouseEvent | TouchEvent</span>) &#123;<br>  e.<span class="hljs-title function_">preventDefault</span>();<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">ev</span>: <span class="hljs-title class_">MouseEvent</span> | <span class="hljs-title class_">Touch</span> = e <span class="hljs-keyword">as</span> <span class="hljs-title class_">MouseEvent</span>;<br>  <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">done</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">isDown</span>) &#123;<br>    <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">TouchEvent</span> &amp;&amp; e.<span class="hljs-property">changedTouches</span>) &#123;<br>      ev = e.<span class="hljs-property">changedTouches</span>[e.<span class="hljs-property">changedTouches</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];<br>    &#125;<br>    <span class="hljs-comment">// (ev.clientX + document.body.scrollLeft) || ev.pageX</span><br>    <span class="hljs-keyword">const</span> x = (ev.<span class="hljs-property">clientX</span> + <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollLeft</span> || ev.<span class="hljs-property">pageX</span>) - <span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetX</span> || <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">const</span> y = (ev.<span class="hljs-property">clientY</span> + <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollTop</span> || ev.<span class="hljs-property">pageY</span>) - <span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetY</span> || <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// const &#123; beginPath, arc, fill &#125; = this.ctx;</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">beginPath</span>();<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">arc</span>(<br>      x * <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">pixelRatio</span>,<br>      y * <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">pixelRatio</span>,<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">radius</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">pixelRatio</span>,<br>      <span class="hljs-number">0</span>,<br>      <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span><br>    );<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">fill</span>();<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="全部刮开"><a class="markdownIt-Anchor" href="#全部刮开"></a> 全部刮开</h2>
+<p>这里就是判断刮开的区域百分比是否超过初始化时设置的阈值, 如果有淡出效果则设置 canvas 的 style.transition, 没有就直接清除画布.<br />
+这里判断刮开区域所占百分比的方法<code>_getFilledPercentage()</code>具体逻辑如下:</p>
+<ol>
+<li>首先要知道 imgData.data 获得的是一个 Uint8Array 点阵数组, 其中 4 个字节表示一个像素, 每个字节分别代表 rgba</li>
+<li>所以这里需要从 i=3 开始累加 4 计算 alpha=0(也可以不是 0,通过设置能够表示透明的阈值)的个数, 最后除以像素数就能够得到刮开区域的百分比</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-title function_">_scratch</span>(<span class="hljs-params">e: MouseEvent | TouchEvent</span>) &#123;<br>    ...<br>      <span class="hljs-comment">// 判断刮百分比</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_getFilledPercentage</span>() &gt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">showAllPercent</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_scratchAll</span>();<br>      &#125;<br>    &#125;<br>  &#125;<br><span class="hljs-title function_">_scratchAll</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">done</span> = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">fadeOut</span> &gt; <span class="hljs-number">0</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">style</span>.<span class="hljs-property">transition</span> = <span class="hljs-string">`all <span class="hljs-subst">$&#123;<span class="hljs-variable language_">this</span>.config.fadeOut&#125;</span>ms linear`</span>;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">style</span>.<span class="hljs-property">opacity</span> = <span class="hljs-string">&#x27;0&#x27;</span>;<br>      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_clear</span>();<br>      &#125;, <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>.<span class="hljs-property">fadeOut</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_clear</span>();<br>    &#125;<br>    <span class="hljs-comment">// 执行回调</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">config</span>?.<span class="hljs-title function_">doneCallback</span>();<br>  &#125;<br>  <span class="hljs-title function_">_clear</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">width</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>);<br>  &#125;<br>  <span class="hljs-comment">// 计算刮开区域百分比, 即计算画布透明区域百分比</span><br>  <span class="hljs-title function_">_getFilledPercentage</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> imgData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">ctx</span>.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">width</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">height</span>);<br>    <span class="hljs-comment">// 点阵数组, 4个字节为一个像素, 每个字节分别代表rgba</span><br>    <span class="hljs-keyword">const</span> pixels = imgData.<span class="hljs-property">data</span>;<br>    <span class="hljs-keyword">let</span> threshold = <span class="hljs-number">0</span>; <span class="hljs-comment">// 这里可以设置阈值表示代表透明的分界线</span><br>    <span class="hljs-keyword">let</span> transparentPixelCount = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">3</span>; i &lt; pixels.<span class="hljs-property">length</span>; i += <span class="hljs-number">4</span>) &#123;<br>      <span class="hljs-keyword">if</span> (pixels[i] &lt;= threshold) &#123;<br>        transparentPixelCount++;<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Number</span>(((transparentPixelCount / (pixels.<span class="hljs-property">length</span> / <span class="hljs-number">4</span>)) * <span class="hljs-number">100</span>).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>));<br>  &#125;<br></code></pre></td></tr></table></figure>
+<p>由于 ImageData 的跨域问题, 不要在本地直接打开, 可以启动一个静态服务器以 http 形式打开<br />
+完整代码已上传到 github<a target="_blank" rel="noopener" href="https://github.com/Mariana-Yui/scratchcard">查看源码</a></p>
+<h1 id="参考资料"><a class="markdownIt-Anchor" href="#参考资料"></a> 参考资料</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903952157245447">一张刮刮卡竟包含这么多前端知识点</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021232132">一张图搞定原型链</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1501018">解决 canvas 在高清屏中绘制模糊的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.itread01.com/content/1550405736.html">js 中的 scrollleft、style.left、clientLeft、offsetLeft</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/58820279/how-to-calculate-transparent-area-of-canvas-in-percentage">计算 canvas 透明区域百分比</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000002405897">鼠标点击位置坐标</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/canvas/">#canvas</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>canvas实现刮刮卡</div>
+      <div>https://mariana-yui.github.io/2021/06/30/2021-06-30-canvas-scratch-card/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/16/2021-11-16-koa-router/" title="koa-router源码解析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">koa-router源码解析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/29/2021-06-29-git-branch-set-up-stream/" title="解决git push时the requested upstream branch &#39;origin/main&#39; does not exist">
+                        <span class="hidden-mobile">解决git push时the requested upstream branch &#39;origin/main&#39; does not exist</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2021/06/30/2021-06-30-canvas-scratch-card/';
+          this.page.identifier = '/2021/06/30/2021-06-30-canvas-scratch-card/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span>Copyright &copy; Mariana Blog <span id="curYear"></span> </span> <br> <span>Theme on <a target="_blank" rel="noopener" href="https://github.com/mariana-yui/mariana-yui.github.io.git">GitHub</a></span> | <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=Mariana-Yui&repo=Mariana-Yui.github.io&type=star&count=true" > </iframe> </div> <div style="font-size: 0.85rem;margin: 0.25rem 0"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> </div> <script src="/js/duration.js"></script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- 动态线条 不知道为啥用js setAttribute无效 直接在ejs里引入 -->
+  <script type="text/javascript"
+    color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>
+  <!-- <script defer="defer" id="fluttering_ribbon" mobile="false" 
+    src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js">
+  </script> -->
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/pre-process-markdown.js"></script>
+<script src="/js/cursor-love.js"></script>
+<script src="/js/nav-title.js"></script>
+<script src="/js/APlayer.min.js"></script>
+<script src="/js/play.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="/js/bg.js"></script>
+<script src="/js/style.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nepmaid/nepmaid.model.json"},"display":{"position":"right","width":250,"height":500,"vOffset":-60},"mobile":{"show":false,"scale":0.5},"react":{"opacity":1,"opacityOnHover":1},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
+</html>
