@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>干货文章-常回来看看</title>
+    <link href="/2024/05/30/2024-05-30-cs-hit-articles-record/"/>
+    <url>/2024/05/30/2024-05-30-cs-hit-articles-record/</url>
+    
+    <content type="html"><![CDATA[<h1 id="常看常新"><a class="markdownIt-Anchor" href="#常看常新"></a> 常看常新</h1><ul><li><a href="https://cloud.tencent.com/developer/article/1633898">深入解析你不知道的 EventLoop 和浏览器渲染、帧动画、空闲回调（动图演示）</a></li><li><a href="https://segmentfault.com/a/1190000008589736">从 Vue 的 nextTick 到浏览器的 EventLoop 和 UI Render</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>多git账号配置管理及ssh远程连接</title>
+    <link href="/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/"/>
+    <url>/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/</url>
+    
+    <content type="html"><![CDATA[<h1 id="h1-背景"><a class="markdownIt-Anchor" href="#h1-背景"></a> H1 背景</h1><p>日常开发中用到 ssh 的场景包括公司内部使用私有化部署的 git 工蜂, github 以及连接 devnet 开发机进行远程开发, 导致 ssh 相关配置混乱. 很久之前就是这一套开发流程了, 一直没记录, 简单记下.</p><h1 id="多-git-账号配置"><a class="markdownIt-Anchor" href="#多-git-账号配置"></a> 多 git 账号配置</h1><h2 id="生成-ssh-秘钥"><a class="markdownIt-Anchor" href="#生成-ssh-秘钥"></a> 生成 ssh 秘钥</h2><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">ssh-keygen -<span class="hljs-built_in">t</span> rsa -C <span class="hljs-string">&quot;邮箱&quot;</span><br></code></pre></td></tr></table></figure><p>按照默认配置操作的话, 最后在<code>~/.ssh</code>下会生成对应的 <strong>公钥</strong> 和 <strong>私钥</strong><br /><img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1716521738423_7278.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" alt="" /></p><h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>《JavaScript设计模式与开发实践》读书笔记</title>
     <link href="/2023/09/10/2023-09-10-javascript-design-mode-and-practice-record/"/>
     <url>/2023/09/10/2023-09-10-javascript-design-mode-and-practice-record/</url>

@@ -13,26 +13,37 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="Mariana Yui">
+  <meta name="author" content="Mariana">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Keep calm and make epic shit.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="https://mariana-yui.github.io/archives/2022/09/index.html">
+    <meta name="description" content="H1 背景 日常开发中用到 ssh 的场景包括公司内部使用私有化部署的 git 工蜂, github 以及连接 devnet 开发机进行远程开发, 导致 ssh 相关配置混乱. 很久之前就是这一套开发流程了, 一直没记录, 简单记下.  多 git 账号配置  生成 ssh 秘钥 1ssh-keygen -t rsa -C &quot;邮箱&quot; 按照默认配置操作的话, 最后在~&#x2F;.ssh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多git账号配置管理及ssh远程连接">
+<meta property="og:url" content="https://mariana-yui.github.io/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/index.html">
 <meta property="og:site_name" content="Mariana&#39;s Blog">
-<meta property="og:description" content="Keep calm and make epic shit.">
+<meta property="og:description" content="H1 背景 日常开发中用到 ssh 的场景包括公司内部使用私有化部署的 git 工蜂, github 以及连接 devnet 开发机进行远程开发, 导致 ssh 相关配置混乱. 很久之前就是这一套开发流程了, 一直没记录, 简单记下.  多 git 账号配置  生成 ssh 秘钥 1ssh-keygen -t rsa -C &quot;邮箱&quot; 按照默认配置操作的话, 最后在~&#x2F;.ssh">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mariana-yui.github.io/imgs/banner/md/2024-05-24-multiple-git-account-ssh-configuration.jpeg">
+<meta property="article:published_time" content="2024-05-24T02:59:33.000Z">
+<meta property="article:modified_time" content="2024-06-01T10:59:18.626Z">
 <meta property="article:author" content="Mariana Yui">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mariana-yui.github.io/imgs/banner/md/2024-05-24-multiple-git-account-ssh-configuration.jpeg">
   
   
   
-  <title>归档 - Mariana&#39;s Blog</title>
+  <title>多git账号配置管理及ssh远程连接 - Mariana&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
 
@@ -130,7 +141,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 60vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -254,15 +265,79 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/imgs/banner/archive.jpeg') no-repeat center center; background-size: cover;">
+     style="background: url('/imgs/banner/md/2024-05-24-multiple-git-account-ssh-configuration.jpeg') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center js-mask" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="归档"></span>
+            <span id="subtitle" data-typed-text="多git账号配置管理及ssh远程连接"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-24 10:59" pubdate>
+          Created: 2024年05月24日 上午 10:59
+        </time>
+      </span>
+    
+    
+      <br>
+      <span class="post-meta">
+        <i class="iconfont icon-clipcheck" aria-hidden="true"></i>
+        <time datetime="2024-06-01 18:59" pubdate>
+          Updated: 2024年06月01日 晚上 18:59
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Mariana
+      </span>
+    
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          189 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          2 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
 
         
       </div>
@@ -278,85 +353,218 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h5">
-    <span class="label label-primary">共计 43 篇文章</span>
-    <span class="label label-success">共计 168k 字</span>
-  </p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2022</p>
-    
-    <a href="/2022/09/30/2022-09-30-study-webpack-day7/" class="list-group-item list-group-item-action">
-      <time>09-30</time>
-      <div class="list-group-item-title">webpack学习笔记(7)</div>
-    </a>
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">多git账号配置管理及ssh远程连接</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="h1-背景"><a class="markdownIt-Anchor" href="#h1-背景"></a> H1 背景</h1>
+<p>日常开发中用到 ssh 的场景包括公司内部使用私有化部署的 git 工蜂, github 以及连接 devnet 开发机进行远程开发, 导致 ssh 相关配置混乱. 很久之前就是这一套开发流程了, 一直没记录, 简单记下.</p>
+<h1 id="多-git-账号配置"><a class="markdownIt-Anchor" href="#多-git-账号配置"></a> 多 git 账号配置</h1>
+<h2 id="生成-ssh-秘钥"><a class="markdownIt-Anchor" href="#生成-ssh-秘钥"></a> 生成 ssh 秘钥</h2>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">ssh-keygen -<span class="hljs-built_in">t</span> rsa -C <span class="hljs-string">&quot;邮箱&quot;</span><br></code></pre></td></tr></table></figure>
+<p>按照默认配置操作的话, 最后在<code>~/.ssh</code>下会生成对应的 <strong>公钥</strong> 和 <strong>私钥</strong><br />
+<img src="https://dev.azure.com/HealMSlin/8544be09-1224-4eb0-824b-90c4ec9d49ee/_apis/git/repositories/7a27a721-4c93-4ecf-8258-d5422217b60a/items?path=%2F1716521738423_7278.png&amp;versionDescriptor%5BversionOptions%5D=0&amp;versionDescriptor%5BversionType%5D=0&amp;versionDescriptor%5Bversion%5D=master&amp;resolveLfs=true&amp;%24format=octetStream&amp;api-version=5.0" srcset="/imgs/loading.gif" lazyload alt="" /></p>
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h1>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
   
     
-    <a href="/2022/09/27/2022-09-27-pm2-online-issue-record/" class="list-group-item list-group-item-action">
-      <time>09-27</time>
-      <div class="list-group-item-title">pm2线上问题处理记录</div>
-    </a>
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
   
+  
+
+      </span>
     
-    <a href="/2022/09/23/2022-09-23-study-webpack-day6/" class="list-group-item list-group-item-action">
-      <time>09-23</time>
-      <div class="list-group-item-title">webpack学习笔记(6)</div>
-    </a>
   
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/git/">#git</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>多git账号配置管理及ssh远程连接</div>
+      <div>https://mariana-yui.github.io/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Mariana</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/30/2024-05-30-cs-hit-articles-record/" title="干货文章-常回来看看">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">干货文章-常回来看看</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/10/2023-09-10-javascript-design-mode-and-practice-record/" title="《JavaScript设计模式与开发实践》读书笔记">
+                        <span class="hidden-mobile">《JavaScript设计模式与开发实践》读书笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
     
-    <a href="/2022/09/15/2022-09-15-study-webpack-day5/" class="list-group-item list-group-item-action">
-      <time>09-15</time>
-      <div class="list-group-item-title">webpack学习笔记(5)</div>
-    </a>
-  
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
     
-    <a href="/2022/09/09/2022-09-09-study-webpack-day4/" class="list-group-item list-group-item-action">
-      <time>09-09</time>
-      <div class="list-group-item-title">webpack学习笔记(4)</div>
-    </a>
-  
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://mariana-yui.github.io/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/';
+          this.page.identifier = '/2024/05/24/2024-05-24-multiple-git-account-ssh-configuration/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'mariana-yui-github-io' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
     
-    <a href="/2022/09/03/2022-09-03-study-webpack-day3/" class="list-group-item list-group-item-action">
-      <time>09-03</time>
-      <div class="list-group-item-title">webpack学习笔记(3)</div>
-    </a>
-  
-    
-    <a href="/2022/09/02/2022-09-02-study-webpack-day2/" class="list-group-item list-group-item-action">
-      <time>09-02</time>
-      <div class="list-group-item-title">webpack学习笔记(2)</div>
-    </a>
-  
-    
-    <a href="/2022/09/01/2022-09-01-study-webpack-day1/" class="list-group-item list-group-item-action">
-      <time>09-01</time>
-      <div class="list-group-item-title">webpack学习笔记(1)</div>
-    </a>
-  
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
 </div>
 
 
 
 
 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
 
     
@@ -482,6 +690,72 @@
 
 
 
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
